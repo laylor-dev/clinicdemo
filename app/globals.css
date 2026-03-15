@@ -1,0 +1,72 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-instrument), ui-serif, Georgia, serif;
+
+  --color-navy: #14151d;
+  --color-navy-light: #2a2b35;
+  --color-beige: #eae8e8;
+  --color-beige-dark: #d6d1d0;
+  --color-gold: #b38c61;
+  --color-gray-dark: #424346;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .text-difference {
+    mix-blend-mode: difference;
+    color: #fff;
+  }
+  .animate-fade-in {
+    animation: fadeIn 1.5s ease both;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+html.lenis {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #14151d;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #3b3d4a;
+  border-radius: 100px;
+  border: 2px solid #14151d;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #eae8e8;
+}
+
+/* For Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #3b3d4a #14151d;
+}
