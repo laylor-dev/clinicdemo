@@ -17,7 +17,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'Aventura Dental Arts | Premium Esthetic Dentistry',
+  title: 'ADA Clinic | Premium Esthetic Dentistry',
   description: 'Designing smiles that are as healthy as they are beautiful.',
 };
 
