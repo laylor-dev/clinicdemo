@@ -2,9 +2,7 @@ import type {NextConfig} from 'next';
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
+  // Removed deprecated eslint ignore
   typescript: {
     ignoreBuildErrors: false,
   },
@@ -32,6 +30,7 @@ const nextConfig: NextConfig = {
     ],
   },
   output: 'standalone',
+  turbopack: {},
   transpilePackages: ['motion', '@splinetool/react-spline', '@splinetool/react-spline/next', '@splinetool/runtime'],
   webpack: (config, {dev}) => {
     // HMR is disabled in AI Studio via DISABLE_HMR env var.
