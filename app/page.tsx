@@ -7,6 +7,7 @@ import Technology from '@/components/Technology';
 import Experts from '@/components/Experts';
 import WhyChooseUs from '@/components/WhyChooseUs';
 import Testimonials from '@/components/Testimonials';
+import BringingToLife from '@/components/BringingToLife';
 import Footer from '@/components/Footer';
 
 export default function Home() {
@@ -21,6 +22,7 @@ export default function Home() {
       <Experts />
       <WhyChooseUs />
       <Testimonials />
+      <BringingToLife />
       <Footer />
     </main>
   );

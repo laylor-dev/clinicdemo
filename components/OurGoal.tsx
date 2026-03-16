@@ -2,9 +2,11 @@
 
 import { useRef, useEffect } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
+import { Plus } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 
 export default function OurGoal() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -28,16 +30,16 @@ export default function OurGoal() {
       ScrollTrigger.create({
         trigger: parent,
         start: 'top top',
-        end: '+=400%',
+        end: '+=400%', // 4 full sections of scroll depth
         pin: true,
-        pinSpacing: true,
+        pinSpacing: true, 
       });
 
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: parent,
           start: 'top top',
-          end: '+=400%',
+          end: '+=400%', 
           scrub: true,
         }
       });
@@ -64,16 +66,17 @@ export default function OurGoal() {
           .map(w => `<span class="ogw" style="opacity:0.12">${w}</span>`)
           .join(' ');
 
-        // Highlight text progressively over the whole scroll
+        // Highlight text progressively (Takes 1.5 scroll units)
         tl.to('.ogw', {
           opacity: 1,
           stagger: 0.05,
           ease: 'none',
-          duration: 0.8
+          duration: 1.5,
+          force3D: true, // Force GPU for better stagger performance
         }, 0); 
       }
 
-      // 1. Photo zooms to fill left 50% seamlessly for next section
+      // 1. Photo zooms to fill left 50% seamlessly for next section (Takes 1.5 scroll units)
       tl.to(photoWrap, {
         top: 0,
         left: 0,
@@ -81,62 +84,102 @@ export default function OurGoal() {
         height: '100vh',
         borderRadius: '0px',
         ease: 'power2.inOut',
-        duration: 0.8
+        duration: 1.5
       }, 0);
 
       // 2. Fade out the title on the left
-      tl.to('.og-title', {
-        opacity: 0,
-        x: -40,
-        ease: 'power2.inOut',
-        duration: 0.3
-      }, 0.1);
+      tl.to('.og-title', { opacity: 0, x: -40, ease: 'power2.inOut', duration: 0.5 }, 0.2);
 
       // 3. Fade out the team info on the right
-      tl.to('.og-team', {
-        opacity: 0,
-        y: -30,
-        ease: 'power2.inOut',
-        duration: 0.3
-      }, 0.1);
+      tl.to('.og-team', { opacity: 0, y: -30, ease: 'power2.inOut', duration: 0.5 }, 0.2);
 
+      // --- THE DELAY ZONE ---
+      // From 1.5 to 2.5, NOTHING happens. The user just scrolls and reads the text.
+      // ----------------------
+
+      // 4. Parallax Lift fade-out - starts at 2.5 after the user finishes reading
+      tl.to(parent, {
+        opacity: 0,
+        ease: 'power2.inOut',
+        duration: 0.5,
+        force3D: true,
+      }, 2.5); // Fades from 2.5 to 3.0
+
+      // 5. Pad the timeline strictly to 4.0 so math aligns perfectly
+      // The overlap slide-up from Services.tsx happens strictly in the final 1.0 (from 3.0 to 4.0)
+      tl.set({}, {}, 4.0);
+      
     });
 
     return () => matchMedia.revert();
   }, []);
 
   return (
-    <section ref={containerRef} className="relative bg-beige h-screen overflow-hidden flex items-center justify-center">
+    <section ref={containerRef} className="relative bg-beige min-h-screen lg:min-h-[900px] overflow-hidden flex items-center justify-center">
 
-      {/* Main Grid Layout Container - 3 Columns */}
-      <div className="w-full max-w-[1600px] px-6 lg:px-12 flex flex-col lg:flex-row items-center lg:items-center justify-between h-full relative z-10 w-full lg:gap-8 pt-32 pb-24 lg:pt-0 lg:pb-0">
+      {/* Main Grid Layout Container */}
+      <div className="w-full max-w-[1600px] px-6 lg:px-12 flex flex-col lg:flex-row items-center lg:items-center justify-between h-full relative z-10 w-full lg:gap-8 pt-24 pb-20 lg:pt-0 lg:pb-0">
 
+        {/* ── MOBILE: Consolidated Text/Team Block ── */}
+        <div className="lg:hidden w-full flex flex-col gap-14">
+          <h2 className="font-serif text-[2.8rem] leading-[1.05] tracking-tight text-navy">
+            Our goal is to deliver world-class dental and aesthetic care through advanced techniques, customized treatments, and a bespoke level of service that makes every patient feel valued.
+          </h2>
+          
+          <div className="flex flex-col gap-8">
+            <div className="flex -space-x-4">
+              {[1, 2, 3].map(i => (
+                <div key={i} className="w-20 h-20 rounded-full border-2 border-beige overflow-hidden relative bg-gray-300">
+                  <Image
+                    src="/assets/dental_team.png"
+                    alt={`Team member ${i}`} fill className="object-cover grayscale"
+                  />
+                </div>
+              ))}
+              <div className="w-20 h-20 rounded-full border-2 border-beige bg-[#e0dbda] flex items-center justify-center font-serif text-3xl text-navy">
+                +20
+              </div>
+            </div>
+            
+            <p className="font-sans text-[15px] leading-relaxed text-gray-dark font-medium max-w-[320px] opacity-70">
+              With decades of combined experience and ongoing advanced education, our team delivers care rooted in knowledge, precision, and an unwavering dedication to excellence.
+            </p>
+          </div>
+
+          <Link href="/about">
+            <button className="flex w-full items-center justify-center gap-2 px-8 py-5 rounded-[2rem] bg-navy text-[#eae8e8] font-sans text-sm tracking-wide font-semibold hover:bg-navy/80 transition-colors">
+              About Us <Plus className="w-3 h-3 ml-2" />
+            </button>
+          </Link>
+        </div>
+
+        {/* ── DESKTOP: Original Animated Layout ── */}
         {/* LEFT COLUMN: "Our goal is" */}
-        <div className="w-full lg:w-3/12 xl:w-[25%] flex flex-col justify-end lg:h-[480px] lg:pb-8 og-title mb-8 lg:mb-0">
-          <h2 className="font-serif text-[clamp(4rem,5.5vw,5.5rem)] text-navy tracking-tight leading-[1] whitespace-nowrap">
+        <div className="hidden lg:flex w-3/12 xl:w-[25%] flex-col justify-end lg:h-[560px] xl:h-[600px] lg:pb-8 og-title will-change-[transform,opacity]">
+          <h2 className="font-serif text-[clamp(2.8rem,5.5vw,5.5rem)] text-navy tracking-tight leading-[1] whitespace-nowrap">
             Our goal is
           </h2>
         </div>
 
         {/* MIDDLE COLUMN: Photo Placeholder */}
-        <div className="w-full lg:w-4/12 xl:w-[28%] flex justify-center lg:justify-start items-center lg:h-[480px]">
+        <div className="hidden lg:flex w-4/12 xl:w-[28%] justify-start items-center lg:h-[560px] xl:h-[600px]">
           <div
             ref={photoHolderRef}
-            className="invisible flex-shrink-0 w-full max-w-[380px] h-[520px] lg:w-[340px] xl:w-[380px] lg:h-[460px] xl:h-[520px]"
+            className="invisible flex-shrink-0 w-full max-w-[380px] h-[480px] lg:w-[340px] xl:w-[380px] lg:h-[480px] xl:h-[560px]"
           />
         </div>
 
         {/* RIGHT COLUMN: Team & Main Text */}
-        <div className="w-full lg:w-5/12 xl:w-[47%] flex flex-col justify-between lg:h-[520px] pr-0 lg:pr-8 xl:pr-10 z-20">
+        <div className="hidden lg:flex w-5/12 xl:w-[47%] flex-col justify-between lg:h-[560px] xl:h-[600px] pr-8 xl:pr-10 z-20">
           
           {/* Top: Team Info */}
-          <div className="flex flex-col lg:flex-row items-start lg:items-center gap-6 xl:gap-8 w-full og-team mt-8 lg:mt-0">
+          <div className="flex flex-row items-center gap-8 xl:gap-8 w-full og-team will-change-[transform,opacity]">
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
-              className="font-sans text-[12px] xl:text-[14px] text-gray-dark font-medium max-w-[280px] leading-relaxed"
+              className="font-sans text-[12px] xl:text-[14px] text-gray-dark font-medium max-w-[280px] leading-relaxed opacity-70"
             >
               With decades of combined experience and ongoing advanced education, our team delivers care rooted in knowledge, precision, and an unwavering dedication to excellence.
             </motion.p>
@@ -151,8 +194,8 @@ export default function OurGoal() {
               {[1, 2, 3].map(i => (
                 <div key={i} className="w-14 h-14 xl:w-20 xl:h-20 rounded-full border-2 border-beige overflow-hidden relative bg-gray-300">
                   <Image
-                    src={`https://api.aventuradentalarts.com/uploads/team_${i === 1 ? '34_363d172ace' : i === 2 ? '35_356a3a9724' : '2_261e39af4e'}.webp`}
-                    alt={`Team member ${i}`} fill className="object-cover grayscale mix-blend-multiply" referrerPolicy="no-referrer"
+                    src="/assets/dental_team.png"
+                    alt={`Team member ${i}`} fill className="object-cover grayscale mix-blend-multiply"
                   />
                 </div>
               ))}
@@ -163,10 +206,10 @@ export default function OurGoal() {
           </div>
 
           {/* Bottom: Main Text */}
-          <div className="mt-8 lg:mt-auto">
+          <div className="mt-auto">
             <h3
               ref={textRef}
-              className="font-serif text-[2.4rem] lg:text-[clamp(2.8rem,4.5vw,4.5rem)] leading-[0.9] tracking-tight text-navy lg:mb-8 mb-6 max-w-[750px]"
+              className="font-serif text-[clamp(2.8rem,4.5vw,4.5rem)] leading-[1] tracking-tight text-navy mb-6 max-w-[750px] will-change-opacity"
             >
               to deliver world-class dental and aesthetic care through advanced techniques, customized treatments, and a bespoke level of service that makes every patient feel valued.
             </h3>
@@ -177,9 +220,11 @@ export default function OurGoal() {
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.3 }}
             >
-              <button className="flex items-center gap-2 px-8 py-3.5 rounded-full bg-navy text-[#eae8e8] font-sans text-[12px] xl:text-[13px] tracking-wide font-semibold hover:bg-navy/80 transition-colors">
-                About Us <span className="text-sm font-light leading-none">+</span>
-              </button>
+              <Link href="/about">
+                <button className="flex items-center gap-2 px-8 py-3.5 rounded-full bg-navy text-[#eae8e8] font-sans text-[12px] xl:text-[13px] tracking-wide font-semibold hover:bg-navy/80 transition-colors">
+                  About Us <span className="text-sm font-light leading-none">+</span>
+                </button>
+              </Link>
             </motion.div>
           </div>
 
@@ -192,11 +237,10 @@ export default function OurGoal() {
         className="hidden lg:block overflow-hidden will-change-transform z-50 shadow-[0_10px_60px_-15px_rgba(0,0,0,0.3)]"
       >
         <Image
-          src="https://api.aventuradentalarts.com/uploads/DSC_03466_2_6fe88d5827.webp"
+          src="/assets/founder_portrait.png"
           alt="Doctor portrait"
           fill
           className="object-cover object-top grayscale"
-          referrerPolicy="no-referrer"
           sizes="50vw"
         />
       </div>

@@ -4,117 +4,155 @@ import { useRef, useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
+// Bubble data matching the reference image layout
+// Positioned inside the bottom-half bowl arc
 const bubbles = [
   {
     id: 'b-locations',
     title: '3',
     subtitle: 'LOCATIONS',
-    style: 'bg-[#9ba1ac] text-navy w-[20vw] h-[20vw] lg:w-[15vw] lg:h-[15vw]',
-    pos: 'left-[15%] bottom-[5%]',
+    bg: '#8b929e',
+    color: '#eae8e8',
+    w: 150, h: 150,
+    // left side, lower bowl (sitting on bowl edge)
+    left: '12%', bottom: '14%',
+    delay: 0.25,
   },
   {
     id: 'b-years',
     title: '35',
     subtitle: 'YEARS OF\nSERVICE',
-    style: 'bg-navy-light text-beige w-[22vw] h-[22vw] lg:w-[17vw] lg:h-[17vw]',
-    pos: 'left-[25%] bottom-[30%]',
+    bg: '#4a5568',
+    color: '#eae8e8',
+    w: 175, h: 175,
+    // left-center, slightly higher up
+    left: '22%', bottom: '28%',
+    delay: 0.15,
   },
   {
     id: 'b-patients',
     title: '20K+',
     subtitle: 'SATISFIED\nPATIENTS',
-    style: 'bg-beige-dark text-navy w-[30vw] h-[30vw] lg:w-[24vw] lg:h-[24vw]',
-    pos: 'left-[40%] bottom-[0%]',
+    bg: '#c8bfb2',
+    color: '#14151d',
+    w: 240, h: 240,
+    // Large — center-left, bottom of bowl
+    left: '33%', bottom: '8%',
+    delay: 0,
   },
   {
     id: 'b-veneers',
     title: '15k',
     subtitle: 'VENEERS\nPLACED',
-    style: 'bg-white text-navy w-[24vw] h-[24vw] lg:w-[18vw] lg:h-[18vw]',
-    pos: 'left-[50%] bottom-[42%] -translate-x-1/2',
+    bg: '#f5f3f0',
+    color: '#14151d',
+    w: 195, h: 195,
+    // Center, slightly above — resting on shoulder of bowl
+    left: '50%', bottom: '32%',
+    transform: 'translateX(-50%)',
+    delay: 0.1,
   },
   {
     id: 'b-crowns',
     title: '27K',
     subtitle: 'CROWNS\nPLACED',
-    style: 'bg-beige text-navy w-[28vw] h-[28vw] lg:w-[22vw] lg:h-[22vw]',
-    pos: 'right-[20%] bottom-[8%]',
+    bg: '#c8bfb2',
+    color: '#14151d',
+    w: 220, h: 220,
+    // Right-center, bottom
+    left: '57%', bottom: '8%',
+    delay: 0.05,
   },
   {
     id: 'b-education',
     title: '2k',
-    subtitle: 'HOURS OF CONTINUED\nEDUCATION',
-    style: 'bg-navy-light text-beige w-[22vw] h-[22vw] lg:w-[16vw] lg:h-[16vw]',
-    pos: 'right-[5%] bottom-[28%]',
+    subtitle: 'HOURS OF\nEDUCATION',
+    bg: '#4a5568',
+    color: '#eae8e8',
+    w: 160, h: 160,
+    // Right side, on the bowl rim
+    left: '76%', bottom: '20%',
+    delay: 0.2,
   },
 ];
 
 export default function WhyChooseUs() {
   const containerRef = useRef<HTMLElement>(null);
-  const pinRef = useRef<HTMLDivElement>(null);
   const circleRef = useRef<HTMLDivElement>(null);
-  
   const textLeftRef = useRef<HTMLHeadingElement>(null);
   const textRightRef = useRef<HTMLHeadingElement>(null);
   const textTopRef = useRef<HTMLParagraphElement>(null);
   const textBottomRef = useRef<HTMLHeadingElement>(null);
-  const bubblesContainerRef = useRef<HTMLDivElement>(null);
+  const bubblesRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
 
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: containerRef.current,
-        start: 'top top',
-        end: '+=200%',
-        scrub: 1,
-        pin: true,
+    const matchMedia = gsap.matchMedia();
+
+    matchMedia.add({
+      isMobile: "(max-width: 1023px)",
+      isDesktop: "(min-width: 1024px)"
+    }, (context) => {
+      const { isMobile } = context.conditions as { isMobile: boolean };
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: 'top top',
+          end: '+=220%',
+          scrub: 1.5,
+          pin: true,
+        }
+      });
+
+      // Phase 1 (0–0.4): surrounding texts fade and float away
+      tl.to([textLeftRef.current, textRightRef.current, textTopRef.current], {
+        y: -60,
+        opacity: 0,
+        duration: 0.8,
+        ease: 'power2.inOut',
+        stagger: 0.05,
+      }, 0);
+
+      // Phase 1: "Your Smile" rises to the top
+      tl.to(textBottomRef.current, {
+        top: isMobile ? '10%' : '6%',
+        scale: isMobile ? 0.7 : 0.9,
+        duration: 0.8,
+        ease: 'power2.inOut',
+      }, 0);
+
+      // Phase 1–2: circle scales up
+      tl.to(circleRef.current, {
+        scale: isMobile ? 8 : 5.5,
+        y: isMobile ? '35%' : '20%',
+        opacity: 1,
+        duration: 2,
+        ease: 'power3.inOut',
+      }, 0);
+
+      // Phase 2 (0.5–1): Bubbles rain down with gravity + bounce
+      if (bubblesRef.current) {
+        const els = Array.from(bubblesRef.current.children) as HTMLElement[];
+        tl.set(bubblesRef.current, { visibility: 'visible' }, 0.5);
+        els.forEach((el, i) => {
+          const bubble = bubbles[i];
+          tl.fromTo(
+            el,
+            { y: -600, opacity: 0, scale: 0.3 },
+            {
+              y: 0,
+              opacity: 1,
+              scale: isMobile ? 0.75 : 1, // Scale down bubbles on mobile
+              duration: 1.2,
+              ease: 'bounce.out',
+            },
+            0.55 + bubble.delay
+          );
+        });
       }
     });
-
-    // Animate texts fading out/moving up
-    tl.to([textLeftRef.current, textRightRef.current, textTopRef.current], {
-      y: -50,
-      opacity: 0,
-      duration: 1,
-      ease: 'power2.inOut',
-    }, 0);
-
-    // Animate "Your Smile" moving to top
-    tl.to(textBottomRef.current, {
-      top: '10%',
-      y: 0,
-      scale: 1.1,
-      duration: 1,
-      ease: 'power2.inOut',
-    }, 0);
-
-    // Expand the circle massively
-    tl.to(circleRef.current, {
-      scale: 3.5,
-      opacity: 0.5,
-      y: '20%',
-      duration: 1.5,
-      ease: 'power2.inOut',
-    }, 0);
-
-    // Drop in the bubbles
-    if (bubblesContainerRef.current) {
-      const bubbleElements = bubblesContainerRef.current.children;
-      tl.fromTo(bubbleElements, 
-        { y: 300, opacity: 0, scale: 0.5 },
-        { 
-          y: 0, 
-          opacity: 1, 
-          scale: 1,
-          duration: 1, 
-          stagger: 0.1, 
-          ease: 'back.out(1.2)' 
-        }, 
-        0.5 // Start halfway through the circle expansion
-      );
-    }
 
     return () => {
       ScrollTrigger.getAll().forEach(t => t.kill());
@@ -122,41 +160,78 @@ export default function WhyChooseUs() {
   }, []);
 
   return (
-    <section ref={containerRef} className="bg-navy h-screen w-full relative overflow-hidden">
-      <div ref={pinRef} className="absolute inset-0 w-full h-full flex items-center justify-center">
-        
-        {/* The expanding circle */}
-        <div 
+    <section
+      ref={containerRef}
+      className="bg-[#14151d] h-screen w-full relative overflow-hidden"
+    >
+      <div className="absolute inset-0 w-full h-full flex items-center justify-center">
+
+        {/* The big circle — starts small, expands to a bowl */}
+        <div
           ref={circleRef}
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[40vw] h-[40vw] max-w-[600px] max-h-[600px] border border-white/20 rounded-full z-0"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full z-0 opacity-40 will-change-transform"
+          style={{
+            width: 'min(50vw, 550px)',
+            height: 'min(50vw, 550px)',
+            border: '1px solid rgba(234,232,232,0.15)',
+          }}
         />
 
-        {/* Initial Texts */}
-        <h2 ref={textLeftRef} className="font-serif text-5xl lg:text-8xl tracking-tight text-beige absolute left-[10%] lg:left-[15%] top-[40%] -translate-y-1/2 z-10 transition-transform">
+        {/* Surrounding text - phase 1 */}
+        <h2
+          ref={textLeftRef}
+          className="font-serif text-[clamp(2.5rem,8vw,8rem)] tracking-tight text-[#eae8e8]/80 absolute left-[6%] top-[38%] -translate-y-1/2 z-10 whitespace-nowrap will-change-[transform,opacity]"
+        >
           We are <em className="italic">here</em>
         </h2>
-        
-        <p ref={textTopRef} className="font-sans text-xs font-medium text-beige text-center absolute top-[38%] left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
-          Why<br/>choose us?
+
+        <p
+          ref={textTopRef}
+          className="font-sans text-[10px] lg:text-[11px] font-bold text-[#eae8e8]/30 text-center absolute top-[36%] left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 leading-relaxed tracking-widest uppercase will-change-[transform,opacity]"
+        >
+          Why<br />choose us?
         </p>
-        
-        <h2 ref={textRightRef} className="font-serif text-5xl lg:text-8xl tracking-tight text-beige absolute right-[10%] lg:right-[15%] top-[40%] -translate-y-1/2 z-10">
+
+        <h2
+          ref={textRightRef}
+          className="font-serif text-[clamp(2.5rem,8vw,8rem)] tracking-tight text-[#eae8e8]/80 absolute right-[6%] top-[38%] -translate-y-1/2 z-10 whitespace-nowrap will-change-[transform,opacity]"
+        >
           to <em className="italic">Enhance</em>
         </h2>
 
-        <h2 ref={textBottomRef} className="font-serif text-6xl lg:text-[10rem] tracking-tight text-beige absolute top-[55%] left-1/2 -translate-x-1/2 z-20 whitespace-nowrap">
+        {/* "Your Smile" - rises to top in phase 1 */}
+        <h2
+          ref={textBottomRef}
+          className="font-serif text-[clamp(3.5rem,10vw,8rem)] tracking-tight text-[#eae8e8] absolute top-[54%] left-1/2 -translate-x-1/2 z-20 whitespace-nowrap will-change-[transform,opacity]"
+        >
           Your Smile
         </h2>
 
-        {/* The bubbles container */}
-        <div ref={bubblesContainerRef} className="absolute inset-0 w-full h-full pointer-events-none z-30 max-w-[1440px] mx-auto">
-          {bubbles.map((bubble) => (
-            <div 
-              key={bubble.id}
-              className={`absolute ${bubble.pos} ${bubble.style} rounded-full flex flex-col items-center justify-center text-center shadow-2xl`}
+        {/* Bubbles — rendered at their absolute positions within the bowl */}
+        <div
+          ref={bubblesRef}
+          className="absolute inset-0 w-full h-full pointer-events-none z-30 invisible origin-center"
+        >
+          {bubbles.map((b) => (
+            <div
+              key={b.id}
+              className="absolute flex flex-col items-center justify-center text-center shadow-2xl rounded-full will-change-transform"
+              style={{
+                width: b.w,
+                height: b.h,
+                background: b.bg,
+                color: b.color,
+                left: b.left,
+                bottom: b.bottom,
+                transform: b.transform ?? undefined,
+              }}
             >
-              <span className="font-serif text-4xl lg:text-6xl tracking-tight mb-1">{bubble.title}</span>
-              <span className="font-sans text-[10px] lg:text-xs font-medium tracking-wider whitespace-pre-line opacity-80">{bubble.subtitle}</span>
+              <span className="font-serif leading-none tracking-tight" style={{ fontSize: Math.round(b.w * 0.3) }}>
+                {b.title}
+              </span>
+              <span className="font-sans font-bold uppercase tracking-widest whitespace-pre-line px-3 leading-tight" style={{ fontSize: Math.round(b.w * 0.08), opacity: 0.6 }}>
+                {b.subtitle}
+              </span>
             </div>
           ))}
         </div>

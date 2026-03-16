@@ -3,17 +3,60 @@
 import { ArrowUpRight } from 'lucide-react';
 import Link from 'next/link';
 import { useRef, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 export default function Footer() {
+  const pathname = usePathname();
+  const isHome = pathname === '/';
+  
   const containerRef = useRef<HTMLElement>(null);
+  const morphRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
-  const circleRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
 
+    // 1. Fluid Adaptive Morph Reveal (Homepage Only)
+    if (isHome && morphRef.current) {
+      gsap.fromTo(morphRef.current,
+        {
+          clipPath: 'ellipse(20% 0% at 50% 0%)',
+          backgroundColor: '#1a1b23',
+        },
+        {
+          clipPath: 'ellipse(150% 100% at 50% 100%)',
+          backgroundColor: '#14151d',
+          ease: 'none',
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: 'top bottom',
+            end: 'top 20%',
+            scrub: true,
+          },
+        }
+      );
+    }
+
+    // 2. Content Fade In
+    if (contentRef.current) {
+      gsap.fromTo(contentRef.current,
+        { opacity: 0, y: 50 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 1,
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: 'top 50%',
+          }
+        }
+      );
+    }
+
+    // 3. Staggered Title Reveal
     if (titleRef.current) {
       const chars = titleRef.current.querySelectorAll('.char');
       gsap.fromTo(chars, 
@@ -32,20 +75,6 @@ export default function Footer() {
       );
     }
 
-    if (circleRef.current) {
-      gsap.to(circleRef.current, {
-        yPercent: -10,
-        scale: 1.05,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: 'top bottom',
-          end: 'bottom top',
-          scrub: true,
-        },
-      });
-    }
-
     return () => {
       ScrollTrigger.getAll().forEach(t => t.kill());
     };
@@ -58,11 +87,16 @@ export default function Footer() {
   };
 
   return (
-    <footer ref={containerRef} className="bg-navy-light text-beige pt-32 pb-8 px-6 lg:px-12 relative overflow-hidden">
-      {/* Large Background Gradient Circle */}
-      <div ref={circleRef} className="absolute top-0 left-1/2 -translate-x-1/2 w-[150vw] h-[150vw] bg-gradient-to-b from-[#2a2b35] to-[#010203] rounded-full pointer-events-none -z-10" />
+    <footer ref={containerRef} className="relative bg-white overflow-hidden">
+      
+      {/* Morphing Background Container */}
+      <div 
+        ref={morphRef}
+        className={`absolute inset-0 w-full h-full z-0 will-change-transform ${!isHome ? 'bg-navy' : ''}`}
+        style={!isHome ? { clipPath: 'none' } : undefined}
+      />
 
-      <div className="max-w-[1440px] mx-auto flex flex-col min-h-[80vh] justify-between">
+      <div ref={contentRef} className="relative z-10 max-w-[1440px] mx-auto flex flex-col min-h-[80vh] justify-between pt-32 pb-8 px-6 lg:px-12 text-beige">
         
         {/* Top Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-0">
@@ -80,12 +114,17 @@ export default function Footer() {
               <div>
                 <p className="font-sans text-sm font-medium text-beige/60 mb-6">Services</p>
                 <ul className="flex flex-col gap-2 font-sans text-xl font-semibold">
-                  {['Esthetic Dentistry', 'Restorative Dentistry', 'Preventive Care', 'Beyond the Smile'].map((item, i) => (
+                  {[
+                    { name: 'Esthetic Dentistry', href: '/services/esthetic-dentistry' },
+                    { name: 'Restorative Dentistry', href: '/services/restorative-dentistry' },
+                    { name: 'Preventive Care', href: '/services/preventive-care' },
+                    { name: 'Beyond the Smile', href: '/services/beyond-the-smile' }
+                  ].map((item, i) => (
                     <li key={i} className="overflow-hidden">
-                      <Link href="#" className="group flex items-center gap-2">
+                      <Link href={item.href} className="group flex items-center gap-2">
                         <span className="relative overflow-hidden">
-                          <span className="block transition-transform duration-500 group-hover:-translate-y-full">{item}</span>
-                          <span className="absolute inset-0 block translate-y-full transition-transform duration-500 group-hover:translate-y-0">{item}</span>
+                          <span className="block transition-transform duration-500 group-hover:-translate-y-full">{item.name}</span>
+                          <span className="absolute inset-0 block translate-y-full transition-transform duration-500 group-hover:translate-y-0">{item.name}</span>
                         </span>
                       </Link>
                     </li>
@@ -95,12 +134,17 @@ export default function Footer() {
               <div>
                 <p className="font-sans text-sm font-medium text-beige/60 mb-6">Our Clinic</p>
                 <ul className="flex flex-col gap-2 font-sans text-xl font-semibold">
-                  {['Home', 'About us', 'Technology', 'Contact'].map((item, i) => (
+                  {[
+                    { name: 'Home', href: '/' },
+                    { name: 'About us', href: '/about' },
+                    { name: 'Technology', href: '/technology' },
+                    { name: 'Contact', href: '/contact' }
+                  ].map((item, i) => (
                     <li key={i} className="overflow-hidden">
-                      <Link href="#" className="group flex items-center gap-2">
+                      <Link href={item.href} className="group flex items-center gap-2">
                         <span className="relative overflow-hidden">
-                          <span className="block transition-transform duration-500 group-hover:-translate-y-full">{item}</span>
-                          <span className="absolute inset-0 block translate-y-full transition-transform duration-500 group-hover:translate-y-0">{item}</span>
+                          <span className="block transition-transform duration-500 group-hover:-translate-y-full">{item.name}</span>
+                          <span className="absolute inset-0 block translate-y-full transition-transform duration-500 group-hover:translate-y-0">{item.name}</span>
                         </span>
                       </Link>
                     </li>
@@ -167,11 +211,11 @@ export default function Footer() {
         <div className="flex flex-col lg:flex-row justify-between items-center gap-8 font-sans text-xs text-beige/60">
           <p>Copyright © 2026 <br/> Aventura Dental Arts</p>
           <div className="flex gap-4">
-            <Link href="#" className="hover:text-beige transition-colors">Privacy Policy</Link>
+            <a href="https://api.aventuradentalarts.com/uploads/Hipaa_Notices_of_Privacy_Practices_docx_1_9be446a7d0.pdf" target="_blank" rel="noopener noreferrer" className="hover:text-beige transition-colors">Privacy Policy</a>
             <span>,</span>
-            <Link href="#" className="hover:text-beige transition-colors">Accessibility Statement</Link>
+            <a href="https://api.aventuradentalarts.com/uploads/ADA_Accessibility_Statement_docx_79cdbf0746.pdf" target="_blank" rel="noopener noreferrer" className="hover:text-beige transition-colors">Accessibility Statement</a>
             <span>,</span>
-            <Link href="#" className="hover:text-beige transition-colors">Terms & Conditions</Link>
+            <a href="https://api.aventuradentalarts.com/uploads/Hipaa_Notices_of_Privacy_Practices_docx_1_9be446a7d0.pdf" target="_blank" rel="noopener noreferrer" className="hover:text-beige transition-colors">Terms & Conditions</a>
           </div>
           <p>Developed by TFTL</p>
         </div>

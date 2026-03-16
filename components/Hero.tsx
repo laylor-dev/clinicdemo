@@ -1,11 +1,14 @@
 'use client';
 
-import { useRef, useEffect } from 'react';
+import Link from 'next/link';
+import { useRef, useEffect, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
+import Spline from '@splinetool/react-spline';
 
 export default function Hero() {
+  const [isMounted, setIsMounted] = useState(false);
   const containerRef  = useRef<HTMLDivElement>(null);
   const stickyRef     = useRef<HTMLDivElement>(null);
   const leftRef       = useRef<HTMLDivElement>(null);
@@ -16,6 +19,7 @@ export default function Hero() {
   const servicesRef   = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    setIsMounted(true);
     gsap.registerPlugin(ScrollTrigger);
 
     const ctx = gsap.context(() => {
@@ -34,11 +38,15 @@ export default function Hero() {
           '-=0.65');
 
       /* ── scroll timeline ── */
+      // Set initial widths so both panels are visible immediately
+      gsap.set(leftRef.current, { width: '50%' });
+      gsap.set(rightRef.current, { width: '50%' });
+
       const st = gsap.timeline({
         scrollTrigger: {
           trigger: containerRef.current,
           start: 'top top',
-          end: '+=150%', // Extended slightly to give room for the reveal
+          end: '+=300%', // Increased to require approx 3-4 scrolls to pass through
           pin: stickyRef.current,
           scrub: 1,
           anticipatePin: 1,
@@ -56,8 +64,13 @@ export default function Hero() {
         .to(rightRef.current,   { width: '100%', duration: 0.5, ease: 'power2.inOut' }, 0.05)
         // scroll marquee left across the screen (starts right and moves left)
         .fromTo(marqueeInner.current, 
-          { x: '100vw' }, 
-          { x: '-38vw', duration: 0.95, ease: 'none' }, 
+          { x: '100vw', xPercent: 0 }, 
+          { 
+            x: '100vw', // keep base translation at 100vw
+            xPercent: -80, // move left by 80% of its own width so the final word remains visible
+            duration: 0.95, 
+            ease: 'none' 
+          }, 
           0.05
         )
         // reveal service tags at bottom
@@ -92,20 +105,28 @@ export default function Hero() {
       {/* sticky layer */}
       <div 
         ref={stickyRef} 
-        className="w-full h-screen flex overflow-hidden will-change-transform bg-navy origin-top"
+        className="w-full h-screen flex flex-row overflow-hidden will-change-transform bg-navy origin-top"
         style={{ clipPath: 'inset(0px 0px 0px 0px)' }}
       >
 
-        {/* ── LEFT beige panel ── */}
+        {/* ── LEFT panel ── */}
         <div
           ref={leftRef}
-          className="absolute inset-y-0 left-0 bg-beige z-10 overflow-hidden"
+          className="relative inset-y-0 left-0 bg-beige z-10 overflow-hidden h-full"
           style={{ width: '50%' }}
         >
-          {/* Subtle horizontal gradient to blend into the video */}
-          <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-transparent to-white/10 pointer-events-none" />
+          {/* Spline 3D Scene */}
+          <div className="absolute top-0 left-0 h-full w-full lg:w-[50vw] z-0 pointer-events-auto hidden lg:flex items-center justify-center mix-blend-multiply opacity-90 overflow-hidden">
+            {isMounted && (
+              <Spline 
+                scene="https://prod.spline.design/aepdXI8IUIN8L9Lb/scene.splinecode" 
+                className="w-full h-full scale-[2.8] lg:scale-[1.6] -translate-y-[10%] lg:-translate-y-[5%] origin-center"
+                style={{ background: 'transparent' }}
+              />
+            )}
+          </div>
           
-          <div className="caption-left absolute inset-x-0 bottom-0 p-8 lg:p-12">
+          <div className="caption-left absolute inset-x-0 bottom-0 p-8 lg:p-12 hidden lg:block">
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -115,17 +136,19 @@ export default function Hero() {
               <p className="font-sans text-[11px] font-medium text-navy/40 mb-2 tracking-widest uppercase">Based in:</p>
               <div className="flex flex-col gap-1 font-sans text-sm font-semibold text-navy">
                 {['Aventura', 'Bay Harbor', 'Coral Gables'].map(loc => (
-                  <p key={loc} className="hover:translate-x-2 transition-transform cursor-pointer w-fit">{loc}</p>
+                  <Link key={loc} href="/contact">
+                    <p className="hover:translate-x-2 transition-transform cursor-pointer w-fit">{loc}</p>
+                  </Link>
                 ))}
               </div>
             </motion.div>
           </div>
         </div>
 
-        {/* ── RIGHT video panel ── */}
+        {/* ── RIGHT panel ── */}
         <div
           ref={rightRef}
-          className="absolute inset-y-0 right-0 bg-navy overflow-hidden z-10"
+          className="relative inset-y-0 right-0 bg-navy overflow-hidden z-10 h-full"
           style={{ width: '50%' }}
         >
           <video autoPlay muted loop playsInline
@@ -135,10 +158,9 @@ export default function Hero() {
             <source src="https://api.aventuradentalarts.com/uploads/Final_ADA_f13c7df4ea.webm" type="video/webm" />
           </video>
           
-          {/* Dark overlay for text readability and horizontal blend */}
           <div className="absolute inset-0 bg-gradient-to-r from-navy via-navy/20 to-transparent pointer-events-none z-20" />
 
-          {/* MARQUEE inside the video panel so it gets naturally clipped on the left edge if video isn't full width */}
+          {/* MARQUEE */}
           <div
             ref={marqueeWrap}
             className="absolute inset-0 flex items-center z-30 pointer-events-none"
@@ -147,46 +169,25 @@ export default function Hero() {
               ref={marqueeInner}
               className="flex will-change-transform w-max"
             >
-              {[0].map(n => (
-                <span
-                  key={n}
-                  className="font-serif text-[12vw] leading-none tracking-tight text-white whitespace-nowrap"
-                  style={{ display: 'inline-block', paddingRight: '4vw' }}
-                >
-                  {MARQUEE}
-                </span>
-              ))}
+              <span className="font-serif text-[15vw] lg:text-[12vw] leading-none tracking-tight text-white whitespace-nowrap px-[4vw]">
+                {MARQUEE}
+              </span>
             </div>
           </div>
-
-          {/* bottom-right caption */}
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 2 }}
-            className="caption-right absolute bottom-10 right-10 text-right font-sans text-[11px] text-white/70 max-w-[190px] leading-snug z-30 hidden lg:block"
-          >
-            We combine advanced science<br />with an artist&apos;s touch.
-          </motion.p>
         </div>
 
-        {/* ── SERVICE LABELS (spans full width, fade in later) ── */}
-        <div ref={servicesRef} className="absolute bottom-10 left-10 right-10 flex justify-between z-30 pointer-events-none">
+        {/* ── SERVICE LABELS ── */}
+        <div ref={servicesRef} className="absolute top-[80%] left-12 right-12 flex justify-between z-30 pointer-events-none">
           {['Implant Restoration', 'Advanced Esthetic', 'Restorative Dentistry'].map(s => (
-            <span key={s} className="font-sans text-[11px] font-semibold tracking-[0.02em] text-white opacity-0">{s}</span>
+            <span key={s} className="font-sans text-xs lg:text-lg font-semibold tracking-[0.02em] text-white opacity-0 drop-shadow-md">{s}</span>
           ))}
         </div>
 
-        {/* ── TITLE overlay (dual-layer clip-path for split color) ── */}
+        {/* ── TITLE overlay ── */}
         <div ref={titleRef} className="absolute inset-0 pointer-events-none z-40">
-          {/* dark layer */}
           <TitleLayer color="text-gray-dark" clip={false} />
-          {/* white layer clipped to right half */}
           <TitleLayer color="text-white" clip />
         </div>
-
-        {/* ── Bottom fade bridge removed for sharp parallax curtain ── */}
-
       </div>
     </div>
   );

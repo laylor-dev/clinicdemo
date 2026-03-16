@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 import { useRef, useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -34,7 +35,7 @@ export default function Experts() {
 
     if (bgRef.current) {
       gsap.to(bgRef.current, {
-        yPercent: 20,
+        yPercent: 15, // Reduced parallax for smoother performance
         ease: 'none',
         scrollTrigger: {
           trigger: containerRef.current,
@@ -48,18 +49,20 @@ export default function Experts() {
     if (titleRef.current) {
       const chars = titleRef.current.querySelectorAll('.char');
       gsap.fromTo(chars, 
-        { opacity: 0, y: 100, rotateX: -90 },
+        { opacity: 0, y: 60, rotateX: -45 }, // Reduced rotation/y for performance
         {
           opacity: 1,
           y: 0,
           rotateX: 0,
-          duration: 1,
-          stagger: 0.02,
-          ease: 'power4.out',
+          duration: 0.8,
+          stagger: 0.015,
+          ease: 'power2.out',
           scrollTrigger: {
             trigger: titleRef.current,
-            start: 'top 85%',
-          }
+            start: 'top 75%',
+            end: '+=15%',
+            scrub: true,
+          },
         }
       );
     }
@@ -76,58 +79,60 @@ export default function Experts() {
   };
 
   return (
-    <section ref={containerRef} className="bg-navy text-beige py-32 lg:py-48 relative overflow-hidden">
+    <section ref={containerRef} className="bg-navy text-beige py-24 lg:py-48 relative overflow-hidden">
       {/* Background Image with Gradient Overlay */}
-      <div className="absolute inset-0 w-full h-[120%] -top-[10%] opacity-40 mix-blend-luminosity pointer-events-none">
+      <div className="absolute inset-0 w-full h-[120%] -top-[10%] opacity-40 mix-blend-luminosity pointer-events-none will-change-transform">
         <div ref={bgRef} className="absolute inset-0 w-full h-full">
           <Image 
-            src="https://api.aventuradentalarts.com/uploads/ADA_Patients_WEB_76_81a8343bfe_1_2_a3ba88e376.webp"
+            src="/assets/clinic_lobby.png"
             alt="Clinic background"
             fill
+            sizes="100vw"
             className="object-cover"
-            referrerPolicy="no-referrer"
           />
         </div>
         <div className="absolute inset-0 bg-gradient-to-b from-navy/0 via-navy/80 to-navy" />
       </div>
 
       <div className="max-w-[1440px] mx-auto px-6 lg:px-12 relative z-10">
-        <h2 ref={titleRef} className="font-serif text-6xl lg:text-[12rem] leading-[0.8] tracking-tight text-center mb-32 mix-blend-color-dodge perspective-[1000px]">
+        <h2 ref={titleRef} className="font-serif text-[clamp(4.5rem,12vw,12rem)] leading-[0.8] tracking-tight text-center mb-40 mix-blend-color-dodge perspective-[1000px] will-change-transform">
           <span className="block overflow-hidden">{splitText('Team')}</span>
           <span className="block overflow-hidden"><em className="italic">{splitText('of Experts')}</em></span>
         </h2>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 lg:gap-24 mb-32">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-24 lg:gap-24 mb-32 lg:mb-44">
           {team.map((member, idx) => (
-            <div key={idx} className="flex flex-col gap-6 group cursor-pointer">
-              <div className="border-t border-beige/20 pt-6 transition-colors duration-500 group-hover:border-beige">
-                <h3 className="font-sans text-2xl font-semibold transition-transform duration-500 group-hover:translate-x-2">{member.name}</h3>
-                <p className="font-sans text-xs font-medium text-beige/60 mt-2 uppercase tracking-widest transition-transform duration-500 group-hover:translate-x-2">{member.role}</p>
+            <div key={idx} className="flex flex-col gap-8 group cursor-pointer will-change-[transform,opacity]">
+              <div className="border-t border-white/10 pt-8 transition-colors duration-500 group-hover:border-beige">
+                <h3 className="font-sans text-2xl lg:text-3xl font-bold tracking-tight transition-transform duration-500 group-hover:translate-x-2">{member.name}</h3>
+                <p className="font-sans text-[10px] xl:text-xs font-bold text-beige/40 mt-3 uppercase tracking-[0.3em] transition-transform duration-500 group-hover:translate-x-2">{member.role}</p>
               </div>
-              <p className="font-sans text-sm leading-relaxed text-beige/80 transition-opacity duration-500 group-hover:text-beige">
+              <p className="font-sans text-sm lg:text-base leading-relaxed text-beige/60 transition-opacity duration-500 group-hover:text-beige max-w-sm">
                 {member.desc}
               </p>
             </div>
           ))}
         </div>
 
-        <div className="flex flex-col lg:flex-row justify-between items-end gap-12 border-t border-beige/20 pt-12">
-          <p className="font-sans text-xl font-medium leading-tight max-w-sm">
-            <strong className="font-bold">Skilled professionals</strong><br/>
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-16 border-t border-white/10 pt-16">
+          <p className="font-sans text-xl lg:text-2xl font-medium leading-tight max-w-sm text-beige/80">
+            <strong className="font-bold text-beige">Skilled professionals</strong><br/>
             delivering expert care with<br/>
             advanced technology.
           </p>
 
-          <div className="text-right flex flex-col items-end">
-            <p className="font-serif text-4xl lg:text-5xl tracking-tight mb-8">
-              Our team is dedicated to providing <br/>
-              <em className="italic">exceptional results</em>
+          <div className="text-left lg:text-right flex flex-col items-start lg:items-end w-full lg:w-auto">
+            <p className="font-serif text-[2.2rem] lg:text-5xl tracking-tight mb-12 lg:mb-10 leading-[1.1]">
+              Our team is dedicated to providing <br className="hidden lg:block" />
+              <em className="italic block lg:inline mt-2 lg:mt-0">exceptional results</em>
             </p>
-            <button className="flex items-center gap-3 px-8 py-4 rounded-full bg-beige text-navy hover:bg-white transition-colors font-sans text-sm font-bold group overflow-hidden relative">
-              <span className="relative z-10 group-hover:-translate-y-full transition-transform duration-500 ease-[0.22,1,0.36,1]">Meet The Team</span>
-              <span className="absolute inset-0 flex items-center justify-center z-10 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-[0.22,1,0.36,1]">Meet The Team</span>
-              <ArrowUpRight className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-500" />
-            </button>
+            <Link href="/about" className="w-full lg:w-auto">
+              <button className="flex w-full lg:w-fit items-center justify-center gap-3 px-10 py-5 rounded-full bg-beige text-navy hover:bg-white transition-colors font-sans text-sm font-bold uppercase tracking-widest group overflow-hidden relative">
+                <span className="relative z-10 group-hover:-translate-y-full transition-transform duration-500 ease-[0.22,1,0.36,1]">Meet The Team</span>
+                <span className="absolute inset-0 flex items-center justify-center z-10 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-[0.22,1,0.36,1]">Meet The Team</span>
+                <ArrowUpRight className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-500" />
+              </button>
+            </Link>
           </div>
         </div>
       </div>
