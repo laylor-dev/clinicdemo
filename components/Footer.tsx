@@ -23,11 +23,11 @@ export default function Footer() {
     if (isHome && morphRef.current) {
       gsap.fromTo(morphRef.current,
         {
-          clipPath: 'ellipse(20% 0% at 50% 0%)',
-          backgroundColor: '#1a1b23',
+          clipPath: 'ellipse(40% 0% at 50% 0%)', // More start curve
+          backgroundColor: '#1c202b', // Slightly lighter start to see the line
         },
         {
-          clipPath: 'ellipse(150% 100% at 50% 100%)',
+          clipPath: 'ellipse(100% 100% at 50% 100%)', // More dramatic end curve
           backgroundColor: '#14151d',
           ease: 'none',
           scrollTrigger: {
@@ -87,7 +87,7 @@ export default function Footer() {
   };
 
   return (
-    <footer ref={containerRef} className="relative bg-white overflow-hidden">
+    <footer ref={containerRef} className="relative bg-transparent overflow-hidden">
       
       {/* Morphing Background Container */}
       <div 
