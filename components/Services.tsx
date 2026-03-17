@@ -12,28 +12,28 @@ const DOCTOR_IMG = 'https://api.aventuradentalarts.com/uploads/DSC_03466_2_6fe88
 
 const services = [
   {
-    id: 'esthetic',
+    id: 'esthetic-dentistry',
     title: 'Esthetic\nDentistry',
     description: 'From teeth whitening and veneers to complete smile makeovers, we use the latest techniques to create natural, stunning results.',
     image: '/assets/tech_cadcam.png',
     procedures: ['Smile Makeovers', 'Esthetic Bonding & Contouring', 'Teeth Whitening', 'Porcelain Veneers']
   },
   {
-    id: 'restorative',
+    id: 'restorative-dentistry',
     title: 'Restorative\nDentistry',
     description: 'Expert restorative treatments to rebuild, protect, and restore your teeth, giving you confidence in both function and appearance.',
     image: '/assets/tech_ct.png',
     procedures: ['Implant Restoration', 'Crowns and bridges', 'Full Mouth Rehabilitation', 'Tooth-Colored Fillings']
   },
   {
-    id: 'preventive',
+    id: 'preventive-care',
     title: 'Preventive\nCare',
     description: 'Routine exams, cleanings, and screenings designed to maintain oral health and prevent issues before they arise.',
     image: '/assets/clinic_lobby.png',
     procedures: ['Oral Cancer Screenings', 'Comprehensive Exams', 'Deep Cleanings', 'Fluoride Treatments', 'Prophylaxis']
   },
   {
-    id: 'beyond',
+    id: 'beyond-the-smile',
     title: 'Beyond\nthe Smile',
     description: 'Discover expert care in facial aesthetics and sleep health with treatments customized for your comfort, confidence, and wellness.',
     image: '/assets/tech_solea.png',
