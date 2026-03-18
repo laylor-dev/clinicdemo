@@ -84,6 +84,10 @@ export default function BringingToLife() {
         <div 
           ref={parallaxRef}
           className="absolute inset-0 w-full h-full will-change-transform z-0"
+          style={{
+            WebkitMaskImage: 'linear-gradient(to bottom, black 70%, transparent 100%)',
+            maskImage: 'linear-gradient(to bottom, black 70%, transparent 100%)'
+          }}
         >
         {/* Ethereal Shadow Animated Background - Lighter/White to contrast the dark silhouette */}
         <div ref={breathingRef} className="relative w-full h-full will-change-transform bg-[#14151d]">
