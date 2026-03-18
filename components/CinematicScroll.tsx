@@ -95,22 +95,40 @@ export default function CinematicScroll() {
     resize();
     window.addEventListener('resize', resize);
 
+    // Prioritize first 40 frames so scroll can start, then load rest lazily
+    const PRIORITY_FRAMES = 40;
     let loaded = 0;
-    const imgs: HTMLImageElement[] = [];
-    for (let i = 1; i <= TOTAL_FRAMES; i++) {
+    const imgs: HTMLImageElement[] = new Array(TOTAL_FRAMES);
+
+    const loadFrame = (i: number) => {
       const img = new Image();
       img.decoding = 'async';
       img.src = frameSrc(i);
       img.onload = img.onerror = () => {
         loaded++;
-        setLoadPct(Math.round((loaded / TOTAL_FRAMES) * 100));
-        if (loaded === TOTAL_FRAMES) {
+        if (loaded <= PRIORITY_FRAMES) {
+          setLoadPct(Math.round((loaded / PRIORITY_FRAMES) * 100));
+        }
+        if (loaded === PRIORITY_FRAMES) {
           setReady(true);
           drawCover(ctx, canvas!, imgs[0]);
+          // After page is interactive, load the rest
+          requestIdleCallback
+            ? requestIdleCallback(() => loadRemainingFrames())
+            : setTimeout(loadRemainingFrames, 500);
         }
       };
-      imgs.push(img);
-    }
+      imgs[i - 1] = img;
+    };
+
+    const loadRemainingFrames = () => {
+      for (let i = PRIORITY_FRAMES + 1; i <= TOTAL_FRAMES; i++) {
+        if (!imgs[i - 1]) loadFrame(i);
+      }
+    };
+
+    // Load priority frames first
+    for (let i = 1; i <= PRIORITY_FRAMES; i++) loadFrame(i);
     images.current = imgs;
 
     /* ── ScrollTrigger ── */

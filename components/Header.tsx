@@ -96,8 +96,8 @@ export default function Header() {
         }`}
       >
         <div
-          style={{ paddingTop: '2.5rem', paddingBottom: '2.5rem' }}
-          className="w-full max-w-[1440px] mx-auto px-6 lg:px-10 flex items-center justify-between gap-4 lg:gap-6"
+          style={{ paddingTop: '3rem', paddingBottom: '3rem' }}
+          className="w-full max-w-[1440px] mx-auto px-6 lg:px-12 flex items-center justify-between gap-4 lg:gap-8"
         >
 
           {/* ── LEFT: Logo + Menu + Services ─────────────────────────────── */}
@@ -120,7 +120,7 @@ export default function Header() {
             {/* Menu button */}
             <button
               onClick={() => { setIsMenuOpen(!isMenuOpen); setIsServicesOpen(false); }}
-              className="hidden lg:flex items-center gap-2 font-sans text-base font-medium hover:opacity-60 transition-opacity"
+              className="hidden lg:flex items-center gap-2 font-sans text-[17px] font-medium hover:opacity-60 transition-opacity"
             >
               {t.header.menu}
               {isMenuOpen ? <X className="w-5 h-5" /> : <MenuIcon className="w-5 h-5" />}
@@ -134,7 +134,7 @@ export default function Header() {
             >
               <button
                 onClick={() => { setIsServicesOpen(!isServicesOpen); setIsMenuOpen(false); }}
-                className="flex items-center gap-1.5 font-sans text-base font-medium hover:opacity-60 transition-opacity"
+                className="flex items-center gap-1.5 font-sans text-[17px] font-medium hover:opacity-60 transition-opacity"
               >
                 {t.header.services}
                 <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${isServicesOpen ? 'rotate-180' : ''}`} />
@@ -143,7 +143,7 @@ export default function Header() {
           </div>
 
           {/* ── RIGHT: Patient Form + Phone + CTA ───────────────────────── */}
-          <div className={`hidden lg:flex items-center gap-7 font-sans text-base font-medium ${rightColor} transition-colors duration-500`}>
+          <div className={`hidden lg:flex items-center gap-9 font-sans text-[17px] font-medium ${rightColor} transition-colors duration-500`}>
 
             <button 
               onClick={() => setLanguage(language === 'en' ? 'fr' : 'en')}

@@ -11,6 +11,7 @@ import { useLanguage } from '@/i18n/LanguageContext';
 export default function Hero() {
   const { t } = useLanguage();
   const [isMounted, setIsMounted] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
   const containerRef  = useRef<HTMLDivElement>(null);
   const stickyRef     = useRef<HTMLDivElement>(null);
   const leftRef       = useRef<HTMLDivElement>(null);
@@ -22,6 +23,7 @@ export default function Hero() {
 
   useEffect(() => {
     setIsMounted(true);
+    setIsDesktop(window.innerWidth >= 1024);
     gsap.registerPlugin(ScrollTrigger);
 
     const ctx = gsap.context(() => {
@@ -117,9 +119,9 @@ export default function Hero() {
           className="relative inset-y-0 left-0 bg-beige z-10 overflow-hidden h-full"
           style={{ width: '50%' }}
         >
-          {/* Spline 3D Scene */}
+          {/* Spline 3D Scene — desktop only, skip on mobile to save GPU */}
           <div className="absolute top-0 left-0 h-full w-full lg:w-[50vw] z-0 pointer-events-auto hidden lg:flex items-center justify-center mix-blend-multiply opacity-90 overflow-hidden">
-            {isMounted && (
+            {isMounted && isDesktop && (
               <Spline 
                 scene="https://prod.spline.design/aepdXI8IUIN8L9Lb/scene.splinecode" 
                 className="w-full h-full scale-[2.8] lg:scale-[1.6] -translate-y-[10%] lg:-translate-y-[5%] origin-center"

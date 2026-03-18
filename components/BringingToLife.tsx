@@ -13,6 +13,7 @@ export default function BringingToLife() {
   const parallaxRef = useRef<HTMLDivElement>(null);
   const breathingRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 1024;
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
@@ -88,8 +89,8 @@ export default function BringingToLife() {
         <div ref={breathingRef} className="relative w-full h-full will-change-transform bg-[#14151d]">
           <EtherealShadow 
             className="absolute inset-0 w-full h-full opacity-90"
-            color="#e2e8f0" // Light grey/white as requested: "make it like white as it was before"
-            animation={{ scale: 80, speed: 40 }}
+            color="#e2e8f0"
+            animation={{ scale: 80, speed: isMobile ? 20 : 40 }}
             noise={{ opacity: 0.6, scale: 1.2 }}
             sizing="fill"
           />
