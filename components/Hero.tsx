@@ -6,8 +6,10 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { motion } from 'framer-motion';
 import Spline from '@splinetool/react-spline';
+import { useLanguage } from '@/i18n/LanguageContext';
 
 export default function Hero() {
+  const { t } = useLanguage();
   const [isMounted, setIsMounted] = useState(false);
   const containerRef  = useRef<HTMLDivElement>(null);
   const stickyRef     = useRef<HTMLDivElement>(null);
@@ -97,7 +99,7 @@ export default function Hero() {
       <span key={i} className={`${cls} inline-block`}>{c === ' ' ? '\u00A0' : c}</span>
     ));
 
-  const MARQUEE = 'Your smile, effortlessly enhanced\u2002\u2002\u2002\u2002\u2002';
+  const MARQUEE = t.hero.marquee;
 
   return (
     <div ref={containerRef} className="relative w-full z-20">
@@ -133,9 +135,9 @@ export default function Hero() {
               transition={{ duration: 1, delay: 1.6 }}
               className="mb-8 lg:mb-14"
             >
-              <p className="font-sans text-[11px] font-medium text-navy/40 mb-2 tracking-widest uppercase">Based in:</p>
+              <p className="font-sans text-[11px] font-medium text-navy/40 mb-2 tracking-widest uppercase">{t.hero.basedIn}</p>
               <div className="flex flex-col gap-1 font-sans text-sm font-semibold text-navy">
-                {['Aventura', 'Bay Harbor', 'Coral Gables'].map(loc => (
+                {t.hero.locations.map((loc: string) => (
                   <Link key={loc} href="/contact">
                     <p className="hover:translate-x-2 transition-transform cursor-pointer w-fit">{loc}</p>
                   </Link>
@@ -178,15 +180,15 @@ export default function Hero() {
 
         {/* ── SERVICE LABELS ── */}
         <div ref={servicesRef} className="absolute top-[80%] left-12 right-12 flex justify-between z-30 pointer-events-none">
-          {['Implant Restoration', 'Advanced Esthetic', 'Restorative Dentistry'].map(s => (
+          {t.hero.services.map((s: string) => (
             <span key={s} className="font-sans text-xs lg:text-lg font-semibold tracking-[0.02em] text-white opacity-0 drop-shadow-md">{s}</span>
           ))}
         </div>
 
         {/* ── TITLE overlay ── */}
         <div ref={titleRef} className="absolute inset-0 pointer-events-none z-40">
-          <TitleLayer color="text-gray-dark" clip={false} />
-          <TitleLayer color="text-white" clip />
+          <TitleLayer color="text-gray-dark" clip={false} t={t} />
+          <TitleLayer color="text-white" clip t={t} />
         </div>
       </div>
     </div>
@@ -196,9 +198,9 @@ export default function Hero() {
 /* ──────────────────────────────────────────────
    Reusable title layer (avoids JSX repetition)
    ────────────────────────────────────────────── */
-function TitleLayer({ color, clip }: { color: string; clip: boolean }) {
-  const split = (t: string, cls: string) =>
-    t.split('').map((c, i) => (
+function TitleLayer({ color, clip, t }: { color: string; clip: boolean; t: any }) {
+  const split = (text: string, cls: string) =>
+    text.split('').map((c, i) => (
       <span key={i} className={`${cls} inline-block origin-bottom`}>{c === ' ' ? '\u00A0' : c}</span>
     ));
 
@@ -211,11 +213,11 @@ function TitleLayer({ color, clip }: { color: string; clip: boolean }) {
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-center px-4 perspective-[1000px]">
         <h1 className="font-serif leading-[0.88] tracking-tight" style={{ fontSize: 'clamp(3rem, 9.5vw, 11rem)' }}>
           <div className="block overflow-hidden pb-1">
-            {split('Premium', 'h1a')}
+            {split(t.hero.titleLine1[0], 'h1a')}
           </div>
           <div className="flex justify-center gap-[5vw] overflow-hidden">
-            <span>{split('Esthetic', 'h1b')}</span>
-            <em className="font-serif italic">{split('Dentistry', 'h1b')}</em>
+            <span>{split(t.hero.titleLine1[1], 'h1b')}</span>
+            <em className="font-serif italic">{split(t.hero.titleLine1[2], 'h1b')}</em>
           </div>
         </h1>
       </div>
@@ -223,9 +225,9 @@ function TitleLayer({ color, clip }: { color: string; clip: boolean }) {
       {/* Bottom subtitle */}
       <div className="absolute bottom-12 lg:bottom-16 left-1/2 -translate-x-1/2 text-center w-full px-6">
         <h2 className="font-serif leading-[0.95] tracking-tight mx-auto" style={{ fontSize: 'clamp(1.2rem, 2vw, 2.2rem)', maxWidth: '380px' }}>
-          <span className="block mb-1">Designing smiles that are</span>
-          <em className="italic block mb-1 opacity-85">as healthy as they are</em>
-          <em className="italic block opacity-85">beautiful</em>
+          <span className="block mb-1">{t.hero.subtitle1}</span>
+          <em className="italic block mb-1 opacity-85">{t.hero.subtitle2}</em>
+          <em className="italic block opacity-85">{t.hero.subtitle3}</em>
         </h2>
       </div>
     </div>

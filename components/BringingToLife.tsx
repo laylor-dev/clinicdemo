@@ -5,8 +5,10 @@ import Image from 'next/image';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { EtherealShadow } from './ui/etheral-shadow';
+import { useLanguage } from '@/i18n/LanguageContext';
 
 export default function BringingToLife() {
+  const { t } = useLanguage();
   const containerRef = useRef<HTMLElement>(null);
   const parallaxRef = useRef<HTMLDivElement>(null);
   const breathingRef = useRef<HTMLDivElement>(null);
@@ -134,22 +136,22 @@ export default function BringingToLife() {
           
           <div className="lg:col-span-5 mb-0 lg:mb-0">
             <h2 className="font-serif italic text-[clamp(3.5rem,10vw,12rem)] leading-[0.75] tracking-tighter drop-shadow-sm">
-              Your Perfect
+              {t.bringingToLife.part1}
             </h2>
           </div>
 
           <div className="lg:col-span-7 flex flex-col items-start lg:items-end mt-4 lg:mt-0">
             <div className="flex flex-col items-start lg:items-end w-full lg:max-w-[800px]">
               <h2 className="font-serif text-[clamp(4.5rem,12vw,14rem)] leading-[0.75] tracking-tighter lg:mb-[-0.1em] lg:mr-[0.5em] drop-shadow-sm">
-                Bringing
+                {t.bringingToLife.part2}
               </h2>
               
               <div className="flex flex-col lg:flex-row items-start lg:items-end gap-2 lg:gap-12 w-full justify-start lg:justify-end mt-4 lg:mt-0">
                 <span className="font-sans text-[10px] lg:text-[11px] uppercase tracking-[0.4em] font-bold text-white/50 mb-2 lg:mb-8 border-l border-white/20 pl-4 text-left lg:text-right">
-                   Premium esthetic<br/>dentistry
+                   {t.bringingToLife.dentalText1}<br/>{t.bringingToLife.dentalText2}
                 </span>
                 <h2 className="font-serif italic text-[clamp(3.5rem,10vw,12rem)] leading-[0.75] tracking-tighter whitespace-nowrap drop-shadow-sm">
-                  Smile to Life
+                  {t.bringingToLife.part3}
                 </h2>
               </div>
             </div>

@@ -6,8 +6,10 @@ import { useRef, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useLanguage } from '@/i18n/LanguageContext';
 
 export default function Footer() {
+  const { t } = useLanguage();
   const pathname = usePathname();
   const isHome = pathname === '/';
   
@@ -112,13 +114,13 @@ export default function Footer() {
             
             <div className="grid grid-cols-2 gap-12">
               <div>
-                <p className="font-sans text-sm font-medium text-beige/60 mb-6">Services</p>
+                <p className="font-sans text-sm font-medium text-beige/60 mb-6">{t.footer.servicesHeader}</p>
                 <ul className="flex flex-col gap-2 font-sans text-xl font-semibold">
                   {[
-                    { name: 'Esthetic Dentistry', href: '/services/esthetic-dentistry' },
-                    { name: 'Restorative Dentistry', href: '/services/restorative-dentistry' },
-                    { name: 'Preventive Care', href: '/services/preventive-care' },
-                    { name: 'Beyond the Smile', href: '/services/beyond-the-smile' }
+                    { name: t.header.estheticDentistry, href: '/services/esthetic-dentistry' },
+                    { name: t.header.restorativeDentistry, href: '/services/restorative-dentistry' },
+                    { name: t.header.preventiveCare, href: '/services/preventive-care' },
+                    { name: t.header.beyondSmile, href: '/services/beyond-the-smile' }
                   ].map((item, i) => (
                     <li key={i} className="overflow-hidden">
                       <Link href={item.href} className="group flex items-center gap-2">
@@ -132,13 +134,13 @@ export default function Footer() {
                 </ul>
               </div>
               <div>
-                <p className="font-sans text-sm font-medium text-beige/60 mb-6">Our Clinic</p>
+                <p className="font-sans text-sm font-medium text-beige/60 mb-6">{t.footer.clinicHeader}</p>
                 <ul className="flex flex-col gap-2 font-sans text-xl font-semibold">
                   {[
-                    { name: 'Home', href: '/' },
-                    { name: 'About us', href: '/about' },
-                    { name: 'Technology', href: '/technology' },
-                    { name: 'Contact', href: '/contact' }
+                    { name: t.footer.links.home, href: '/' },
+                    { name: t.footer.links.about, href: '/about' },
+                    { name: t.footer.links.technology, href: '/technology' },
+                    { name: t.footer.links.contact, href: '/contact' }
                   ].map((item, i) => (
                     <li key={i} className="overflow-hidden">
                       <Link href={item.href} className="group flex items-center gap-2">
@@ -156,27 +158,27 @@ export default function Footer() {
 
           <div className="flex flex-col items-start lg:items-end">
             <h3 ref={titleRef} className="font-serif text-4xl lg:text-5xl tracking-tight mb-12 text-left lg:text-right max-w-md">
-              <span className="block overflow-hidden">{splitText('Ready to Transform')}</span>
-              <span className="block overflow-hidden">{splitText('Your Smile?')}</span>
-              <span className="block overflow-hidden"><em className="italic">{splitText('Book a call.')}</em></span>
+              <span className="block overflow-hidden">{splitText(t.footer.readyTransform1)}</span>
+              <span className="block overflow-hidden">{splitText(t.footer.readyTransform2)}</span>
+              <span className="block overflow-hidden"><em className="italic">{splitText(t.footer.bookCall)}</em></span>
             </h3>
 
             <form className="w-full max-w-xl flex flex-col gap-2">
               <div className="flex gap-2">
                 <input 
                   type="text" 
-                  placeholder="Name" 
+                  placeholder={t.footer.formName}
                   className="w-full bg-transparent border border-white/15 rounded-full px-8 py-6 font-sans text-sm focus:border-beige outline-none transition-colors"
                 />
                 <input 
                   type="tel" 
-                  placeholder="Phone number" 
+                  placeholder={t.footer.formPhone}
                   className="w-full bg-transparent border border-white/15 rounded-full px-8 py-6 font-sans text-sm focus:border-beige outline-none transition-colors"
                 />
               </div>
               <div className="flex gap-2">
                 <textarea 
-                  placeholder="Message" 
+                  placeholder={t.footer.formMessage}
                   rows={1}
                   className="w-full bg-transparent border border-white/15 rounded-[2rem] px-8 py-6 font-sans text-sm focus:border-beige outline-none transition-colors resize-none"
                 />
@@ -191,33 +193,33 @@ export default function Footer() {
         {/* Locations Section */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 py-16 border-y border-white/15 my-16">
           <div className="flex flex-col gap-4 group cursor-pointer">
-            <h4 className="font-sans text-xl font-semibold underline underline-offset-4 transition-colors duration-300 group-hover:text-white">Aventura</h4>
-            <p className="font-sans text-xs text-beige/80 transition-colors duration-300 group-hover:text-beige">18851 NE 29th Avenue Suite 301, Aventura, FL 33180</p>
-            <p className="font-sans text-sm font-bold transition-colors duration-300 group-hover:text-white">(305) 682-1414</p>
+            <h4 className="font-sans text-xl font-semibold underline underline-offset-4 transition-colors duration-300 group-hover:text-white">{t.footer.locations.aventura.name}</h4>
+            <p className="font-sans text-xs text-beige/80 transition-colors duration-300 group-hover:text-beige">{t.footer.locations.aventura.address}</p>
+            <p className="font-sans text-sm font-bold transition-colors duration-300 group-hover:text-white">{t.footer.locations.aventura.phone}</p>
           </div>
           <div className="flex flex-col gap-4 border-l border-white/15 pl-8 group cursor-pointer">
-            <h4 className="font-sans text-xl font-semibold underline underline-offset-4 transition-colors duration-300 group-hover:text-white">Bay Harbor</h4>
-            <p className="font-sans text-xs text-beige/80 transition-colors duration-300 group-hover:text-beige">1031 Kane Concourse, Bay Harbor Islands, FL 33154</p>
-            <p className="font-sans text-sm font-bold transition-colors duration-300 group-hover:text-white">(305) 864-1656</p>
+            <h4 className="font-sans text-xl font-semibold underline underline-offset-4 transition-colors duration-300 group-hover:text-white">{t.footer.locations.bayHarbor.name}</h4>
+            <p className="font-sans text-xs text-beige/80 transition-colors duration-300 group-hover:text-beige">{t.footer.locations.bayHarbor.address}</p>
+            <p className="font-sans text-sm font-bold transition-colors duration-300 group-hover:text-white">{t.footer.locations.bayHarbor.phone}</p>
           </div>
           <div className="flex flex-col gap-4 border-l border-white/15 pl-8 group cursor-pointer">
-            <h4 className="font-sans text-xl font-semibold underline underline-offset-4 transition-colors duration-300 group-hover:text-white">Coral Gables</h4>
-            <p className="font-sans text-xs text-beige/80 transition-colors duration-300 group-hover:text-beige">6705 S Red Rd Suite 614, Coral Gables, FL 33143</p>
-            <p className="font-sans text-sm font-bold transition-colors duration-300 group-hover:text-white">(305) 668-1811</p>
+            <h4 className="font-sans text-xl font-semibold underline underline-offset-4 transition-colors duration-300 group-hover:text-white">{t.footer.locations.coralGables.name}</h4>
+            <p className="font-sans text-xs text-beige/80 transition-colors duration-300 group-hover:text-beige">{t.footer.locations.coralGables.address}</p>
+            <p className="font-sans text-sm font-bold transition-colors duration-300 group-hover:text-white">{t.footer.locations.coralGables.phone}</p>
           </div>
         </div>
 
         {/* Bottom Section */}
         <div className="flex flex-col lg:flex-row justify-between items-center gap-8 font-sans text-xs text-beige/60">
-          <p>Copyright © 2026 <br/> Aventura Dental Arts</p>
+          <p className="whitespace-pre-line">{t.footer.copyright}</p>
           <div className="flex gap-4">
-            <a href="https://api.aventuradentalarts.com/uploads/Hipaa_Notices_of_Privacy_Practices_docx_1_9be446a7d0.pdf" target="_blank" rel="noopener noreferrer" className="hover:text-beige transition-colors">Privacy Policy</a>
+            <a href="https://api.aventuradentalarts.com/uploads/Hipaa_Notices_of_Privacy_Practices_docx_1_9be446a7d0.pdf" target="_blank" rel="noopener noreferrer" className="hover:text-beige transition-colors">{t.footer.privacy}</a>
             <span>,</span>
-            <a href="https://api.aventuradentalarts.com/uploads/ADA_Accessibility_Statement_docx_79cdbf0746.pdf" target="_blank" rel="noopener noreferrer" className="hover:text-beige transition-colors">Accessibility Statement</a>
+            <a href="https://api.aventuradentalarts.com/uploads/ADA_Accessibility_Statement_docx_79cdbf0746.pdf" target="_blank" rel="noopener noreferrer" className="hover:text-beige transition-colors">{t.footer.accessibility}</a>
             <span>,</span>
-            <a href="https://api.aventuradentalarts.com/uploads/Hipaa_Notices_of_Privacy_Practices_docx_1_9be446a7d0.pdf" target="_blank" rel="noopener noreferrer" className="hover:text-beige transition-colors">Terms & Conditions</a>
+            <a href="https://api.aventuradentalarts.com/uploads/Hipaa_Notices_of_Privacy_Practices_docx_1_9be446a7d0.pdf" target="_blank" rel="noopener noreferrer" className="hover:text-beige transition-colors">{t.footer.terms}</a>
           </div>
-          <p>Developed by TFTL</p>
+          <p>{t.footer.developedBy}</p>
         </div>
 
       </div>

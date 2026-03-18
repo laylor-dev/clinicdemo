@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useLanguage } from '@/i18n/LanguageContext';
 
 const TOTAL_FRAMES = 240;
 const PX_PER_FRAME = 22; // scroll distance per frame → total = 5280px
@@ -32,34 +33,23 @@ function drawCover(ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, img
 interface Scene {
   startFrame: number;
   endFrame:   number;
-  eyebrow:    string;
-  headline:   string[];   // lines
-  sub?:       string;
   align:      'left' | 'right' | 'center';
 }
 
-const SCENES: Scene[] = [
+const SCENE_CONFIGS: Scene[] = [
   {
     startFrame: 10,
     endFrame:   95,
-    eyebrow:    'State-of-the-art facilities',
-    headline:   ['Precision', 'beyond', 'compare.'],
-    sub:        'Advanced technology. Exceptional results.',
     align:      'left',
   },
   {
     startFrame: 100,
     endFrame:   175,
-    eyebrow:    'Expert craftsmanship',
-    headline:   ['Where artistry', 'meets science.'],
-    sub:        'Every detail, intentional.',
     align:      'right',
   },
   {
     startFrame: 180,
     endFrame:   232,
-    eyebrow:    'Aventura Dental Arts',
-    headline:   ['Your smile,', 'effortlessly', 'achieved.'],
     align:      'center',
   },
 ];
@@ -72,11 +62,17 @@ function sceneProgress(frame: number, s: Scene): number {
 
 /* ── component ──────────────────────────────────────────────────── */
 export default function CinematicScroll() {
+  const { t } = useLanguage();
   const sectionRef   = useRef<HTMLDivElement>(null);
   const canvasRef    = useRef<HTMLCanvasElement>(null);
   const images       = useRef<HTMLImageElement[]>([]);
   const currentFrame = useRef(0);
   const frameIdxRef  = useRef(0);
+
+  const SCENES = SCENE_CONFIGS.map((config, index) => ({
+    ...config,
+    ...t.cinematicScroll.scenes[index]
+  }));
 
   const [loadPct,  setLoadPct]  = useState(0);
   const [ready,    setReady]    = useState(false);
@@ -202,7 +198,7 @@ export default function CinematicScroll() {
         {/* ── Scroll hint ── */}
         {ready && sceneIdx === -1 && (
           <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-20 pointer-events-none">
-            <span className="font-sans text-[9px] tracking-[0.35em] uppercase text-white/40">Scroll</span>
+            <span className="font-sans text-[9px] tracking-[0.35em] uppercase text-white/40">{t.cinematicScroll.scroll}</span>
             <div className="w-px h-8 bg-white/25 animate-pulse" />
           </div>
         )}
@@ -217,7 +213,7 @@ function SceneOverlay({
   active,
   progress,
 }: {
-  scene: Scene;
+  scene: any;
   active: boolean;
   progress: number;
 }) {
@@ -300,7 +296,7 @@ function SceneOverlay({
       </p>
 
       {/* headline lines */}
-      {scene.headline.map((line, i) => (
+      {scene.headline.map((line: string, i: number) => (
         <div
           key={i}
           ref={el => { if (el) linesRef.current[i] = el; }}

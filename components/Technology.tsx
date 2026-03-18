@@ -7,41 +7,22 @@ import Link from 'next/link';
 import { ArrowUpRight, ArrowLeft, ArrowRight } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-const technologies = [
-  {
-    id: 'itero',
-    title: 'iTero Digital Impressions',
-    image: '/assets/tech_cadcam.png'
-  },
-  {
-    id: 'solea',
-    title: 'Solea Laser',
-    image: '/assets/tech_solea.png'
-  },
-  {
-    id: 'imaging',
-    title: 'Digital Imaging',
-    image: '/assets/tech_ct.png'
-  },
-  {
-    id: 'cadcam',
-    title: 'CAD/CAM Restorations',
-    image: '/assets/tech_cadcam.png'
-  },
-  {
-    id: 'scan',
-    title: '3D CAT Scan',
-    image: '/assets/tech_ct.png'
-  },
-  {
-    id: 'intra-oral',
-    title: 'Intra-Oral High Definition',
-    image: '/assets/tech_solea.png'
-  }
-];
+import { useLanguage } from '@/i18n/LanguageContext';
 
 export default function Technology() {
+  const { t } = useLanguage();
+
+  const technologies = t.technology.items.map((item: any, i: number) => ({
+    ...item,
+    image: [
+      '/assets/tech_cadcam.png',
+      '/assets/tech_solea.png',
+      '/assets/tech_ct.png',
+      '/assets/tech_cadcam.png',
+      '/assets/tech_ct.png',
+      '/assets/tech_solea.png'
+    ][i]
+  }));
   const containerRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
 
@@ -112,9 +93,9 @@ export default function Technology() {
         {/* ── MOBILE: Science Overhaul ── */}
         <div className="lg:hidden flex flex-col items-center">
           <h2 className="font-serif text-[4.2rem] leading-[0.85] tracking-tight text-navy text-center mb-20 whitespace-normal overflow-visible">
-            Driven Dentistry <br/>
-            <em className="italic">for Exceptional</em> <br/>
-            Results
+            {t.technology.mobileTitleLine1} <br/>
+            <em className="italic">{t.technology.mobileTitleLine2}</em> <br/>
+            {t.technology.mobileTitleLine3}
           </h2>
 
           <div className="relative w-full overflow-hidden mb-12">
@@ -147,7 +128,7 @@ export default function Technology() {
                   {technologies[currentIndex].title}
                 </h3>
                 <Link href="/technology" className="font-sans text-xs font-bold uppercase tracking-widest text-navy/40 border-b border-navy/10 pb-1">
-                  Learn more
+                  {t.technology.learnMore}
                 </Link>
               </motion.div>
 
@@ -187,17 +168,17 @@ export default function Technology() {
         <div className="hidden lg:block">
           {/* Title Area */}
           <div className="w-full mb-32 lg:mb-40">
-            <p className="font-sans text-xs font-medium mb-6 text-navy/40 uppercase tracking-[0.4em]">Precision Care</p>
+            <p className="font-sans text-xs font-medium mb-6 text-navy/40 uppercase tracking-[0.4em]">{t.technology.precisionCare}</p>
             <h2 ref={titleRef} className="font-serif text-[clamp(2.5rem,5.5vw,5.5rem)] text-navy leading-[1.1] will-change-transform">
-              <span className="block overflow-hidden">{splitText('Technology-Driven')}</span>
-              <span className="block overflow-hidden"><em className="italic">{splitText('Dentistry for')}</em> {splitText('Exceptional')}</span>
-              <span className="block overflow-hidden">{splitText('Results')}</span>
+              <span className="block overflow-hidden">{splitText(t.technology.desktopTitle1)}</span>
+              <span className="block overflow-hidden"><em className="italic">{splitText(t.technology.desktopTitle2)}</em> {splitText(t.technology.desktopTitle3)}</span>
+              <span className="block overflow-hidden">{splitText(t.technology.desktopTitle4)}</span>
             </h2>
           </div>
 
           {/* Technologies Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-20 lg:gap-16">
-            {technologies.map((tech) => (
+            {technologies.map((tech: any) => (
               <Link 
                 key={tech.id}
                 href="/technology" 

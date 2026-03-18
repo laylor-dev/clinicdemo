@@ -7,8 +7,10 @@ import { Plus } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { motion } from 'framer-motion';
+import { useLanguage } from '@/i18n/LanguageContext';
 
 export default function OurGoal() {
+  const { t } = useLanguage();
   const containerRef = useRef<HTMLDivElement>(null);
   const photoHolderRef = useRef<HTMLDivElement>(null);
   const photoWrapperRef = useRef<HTMLDivElement>(null);
@@ -123,7 +125,7 @@ export default function OurGoal() {
         {/* ── MOBILE: Consolidated Text/Team Block ── */}
         <div className="lg:hidden w-full flex flex-col gap-14">
           <h2 className="font-serif text-[2.8rem] leading-[1.05] tracking-tight text-navy">
-            Our goal is to deliver world-class dental and aesthetic care through advanced techniques, customized treatments, and a bespoke level of service that makes every patient feel valued.
+            {t.ourGoal.mobileTitle}
           </h2>
           
           <div className="flex flex-col gap-8">
@@ -142,13 +144,13 @@ export default function OurGoal() {
             </div>
             
             <p className="font-sans text-[15px] leading-relaxed text-gray-dark font-medium max-w-[320px] opacity-70">
-              With decades of combined experience and ongoing advanced education, our team delivers care rooted in knowledge, precision, and an unwavering dedication to excellence.
+              {t.ourGoal.teamText}
             </p>
           </div>
 
           <Link href="/about">
             <button className="flex w-full items-center justify-center gap-2 px-8 py-5 rounded-[2rem] bg-navy text-[#eae8e8] font-sans text-sm tracking-wide font-semibold hover:bg-navy/80 transition-colors">
-              About Us <Plus className="w-3 h-3 ml-2" />
+              {t.ourGoal.aboutUs} <Plus className="w-3 h-3 ml-2" />
             </button>
           </Link>
         </div>
@@ -157,7 +159,7 @@ export default function OurGoal() {
         {/* LEFT COLUMN: "Our goal is" */}
         <div className="hidden lg:flex w-3/12 xl:w-[25%] flex-col justify-end lg:h-[560px] xl:h-[600px] lg:pb-8 og-title will-change-[transform,opacity]">
           <h2 className="font-serif text-[clamp(2.8rem,5.5vw,5.5rem)] text-navy tracking-tight leading-[1] whitespace-nowrap">
-            Our goal is
+            {t.ourGoal.desktopTitleStart}
           </h2>
         </div>
 
@@ -181,7 +183,7 @@ export default function OurGoal() {
               transition={{ duration: 0.8 }}
               className="font-sans text-[12px] xl:text-[14px] text-gray-dark font-medium max-w-[280px] leading-relaxed opacity-70"
             >
-              With decades of combined experience and ongoing advanced education, our team delivers care rooted in knowledge, precision, and an unwavering dedication to excellence.
+              {t.ourGoal.teamText}
             </motion.p>
 
             <motion.div
@@ -211,7 +213,7 @@ export default function OurGoal() {
               ref={textRef}
               className="font-serif text-[clamp(2.8rem,4.5vw,4.5rem)] leading-[1] tracking-tight text-navy mb-6 max-w-[750px] will-change-opacity"
             >
-              to deliver world-class dental and aesthetic care through advanced techniques, customized treatments, and a bespoke level of service that makes every patient feel valued.
+              {t.ourGoal.desktopTitleEnd}
             </h3>
  
             <motion.div
@@ -222,7 +224,7 @@ export default function OurGoal() {
             >
               <Link href="/about">
                 <button className="flex items-center gap-2 px-8 py-3.5 rounded-full bg-navy text-[#eae8e8] font-sans text-[12px] xl:text-[13px] tracking-wide font-semibold hover:bg-navy/80 transition-colors">
-                  About Us <span className="text-sm font-light leading-none">+</span>
+                  {t.ourGoal.aboutUs} <span className="text-sm font-light leading-none">+</span>
                 </button>
               </Link>
             </motion.div>

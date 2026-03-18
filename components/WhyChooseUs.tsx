@@ -3,80 +3,82 @@
 import { useRef, useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-// Bubble data matching the reference image layout
-// Positioned inside the bottom-half bowl arc
-const bubbles = [
-  {
-    id: 'b-locations',
-    title: '3',
-    subtitle: 'LOCATIONS',
-    bg: '#8b929e',
-    color: '#eae8e8',
-    w: 150, h: 150,
-    // left side, lower bowl (sitting on bowl edge)
-    left: '12%', bottom: '14%',
-    delay: 0.25,
-  },
-  {
-    id: 'b-years',
-    title: '35',
-    subtitle: 'YEARS OF\nSERVICE',
-    bg: '#4a5568',
-    color: '#eae8e8',
-    w: 175, h: 175,
-    // left-center, slightly higher up
-    left: '22%', bottom: '28%',
-    delay: 0.15,
-  },
-  {
-    id: 'b-patients',
-    title: '20K+',
-    subtitle: 'SATISFIED\nPATIENTS',
-    bg: '#c8bfb2',
-    color: '#14151d',
-    w: 240, h: 240,
-    // Large — center-left, bottom of bowl
-    left: '33%', bottom: '8%',
-    delay: 0,
-  },
-  {
-    id: 'b-veneers',
-    title: '15k',
-    subtitle: 'VENEERS\nPLACED',
-    bg: '#f5f3f0',
-    color: '#14151d',
-    w: 195, h: 195,
-    // Center, slightly above — resting on shoulder of bowl
-    left: '50%', bottom: '32%',
-    transform: 'translateX(-50%)',
-    delay: 0.1,
-  },
-  {
-    id: 'b-crowns',
-    title: '27K',
-    subtitle: 'CROWNS\nPLACED',
-    bg: '#c8bfb2',
-    color: '#14151d',
-    w: 220, h: 220,
-    // Right-center, bottom
-    left: '57%', bottom: '8%',
-    delay: 0.05,
-  },
-  {
-    id: 'b-education',
-    title: '2k',
-    subtitle: 'HOURS OF\nEDUCATION',
-    bg: '#4a5568',
-    color: '#eae8e8',
-    w: 160, h: 160,
-    // Right side, on the bowl rim
-    left: '76%', bottom: '20%',
-    delay: 0.2,
-  },
-];
+import { useLanguage } from '@/i18n/LanguageContext';
 
 export default function WhyChooseUs() {
+  const { t } = useLanguage();
+
+  // Bubble data matching the reference image layout
+  // Positioned inside the bottom-half bowl arc
+  const bubbles = [
+    {
+      id: 'b-locations',
+      title: '3',
+      subtitle: t.whyChooseUs.bubbles.locations,
+      bg: '#8b929e',
+      color: '#eae8e8',
+      w: 150, h: 150,
+      // left side, lower bowl (sitting on bowl edge)
+      left: '12%', bottom: '14%',
+      delay: 0.25,
+    },
+    {
+      id: 'b-years',
+      title: '35',
+      subtitle: t.whyChooseUs.bubbles.yearsOfService,
+      bg: '#4a5568',
+      color: '#eae8e8',
+      w: 175, h: 175,
+      // left-center, slightly higher up
+      left: '22%', bottom: '28%',
+      delay: 0.15,
+    },
+    {
+      id: 'b-patients',
+      title: '20K+',
+      subtitle: t.whyChooseUs.bubbles.satisfiedPatients,
+      bg: '#c8bfb2',
+      color: '#14151d',
+      w: 240, h: 240,
+      // Large — center-left, bottom of bowl
+      left: '33%', bottom: '8%',
+      delay: 0,
+    },
+    {
+      id: 'b-veneers',
+      title: '15k',
+      subtitle: t.whyChooseUs.bubbles.veneersPlaced,
+      bg: '#f5f3f0',
+      color: '#14151d',
+      w: 195, h: 195,
+      // Center, slightly above — resting on shoulder of bowl
+      left: '50%', bottom: '32%',
+      transform: 'translateX(-50%)',
+      delay: 0.1,
+    },
+    {
+      id: 'b-crowns',
+      title: '27K',
+      subtitle: t.whyChooseUs.bubbles.crownsPlaced,
+      bg: '#c8bfb2',
+      color: '#14151d',
+      w: 220, h: 220,
+      // Right-center, bottom
+      left: '57%', bottom: '8%',
+      delay: 0.05,
+    },
+    {
+      id: 'b-education',
+      title: '2k',
+      subtitle: t.whyChooseUs.bubbles.hoursEducation,
+      bg: '#4a5568',
+      color: '#eae8e8',
+      w: 160, h: 160,
+      // Right side, on the bowl rim
+      left: '76%', bottom: '20%',
+      delay: 0.2,
+    },
+  ];
   const containerRef = useRef<HTMLElement>(null);
   const circleRef = useRef<HTMLDivElement>(null);
   const textLeftRef = useRef<HTMLHeadingElement>(null);
@@ -182,21 +184,21 @@ export default function WhyChooseUs() {
           ref={textLeftRef}
           className="font-serif text-[clamp(2.5rem,8vw,8rem)] tracking-tight text-[#eae8e8]/80 absolute left-[6%] top-[38%] -translate-y-1/2 z-10 whitespace-nowrap will-change-[transform,opacity]"
         >
-          We are <em className="italic">here</em>
+          {t.whyChooseUs.weAre} <em className="italic">{t.whyChooseUs.here}</em>
         </h2>
 
         <p
           ref={textTopRef}
           className="font-sans text-[10px] lg:text-[11px] font-bold text-[#eae8e8]/30 text-center absolute top-[36%] left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 leading-relaxed tracking-widest uppercase will-change-[transform,opacity]"
         >
-          Why<br />choose us?
+          {t.whyChooseUs.why}<br />{t.whyChooseUs.chooseUs}
         </p>
 
         <h2
           ref={textRightRef}
           className="font-serif text-[clamp(2.5rem,8vw,8rem)] tracking-tight text-[#eae8e8]/80 absolute right-[6%] top-[38%] -translate-y-1/2 z-10 whitespace-nowrap will-change-[transform,opacity]"
         >
-          to <em className="italic">Enhance</em>
+          {t.whyChooseUs.to} <em className="italic">{t.whyChooseUs.enhance}</em>
         </h2>
 
         {/* "Your Smile" - rises to top in phase 1 */}
@@ -204,7 +206,7 @@ export default function WhyChooseUs() {
           ref={textBottomRef}
           className="font-serif text-[clamp(3.5rem,10vw,8rem)] tracking-tight text-[#eae8e8] absolute top-[54%] left-1/2 -translate-x-1/2 z-20 whitespace-nowrap will-change-[transform,opacity]"
         >
-          Your Smile
+          {t.whyChooseUs.yourSmile}
         </h2>
 
         {/* Bubbles — rendered at their absolute positions within the bowl */}

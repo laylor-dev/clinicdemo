@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import MagneticButton from './MagneticButton';
+import { useLanguage } from '@/i18n/LanguageContext';
 
 const serviceCards = [
   { title: 'Esthetic Dentistry',     href: '/services/esthetic-dentistry',    img: '/assets/tech_cadcam.png' },
@@ -30,6 +31,15 @@ const menuItemVariants = {
 };
 
 export default function Header() {
+  const { t, language, setLanguage } = useLanguage();
+
+  const translatedServiceCards = [
+    { title: t.header.estheticDentistry, href: '/services/esthetic-dentistry', img: '/assets/tech_cadcam.png' },
+    { title: t.header.restorativeDentistry, href: '/services/restorative-dentistry', img: '/assets/tech_ct.png' },
+    { title: t.header.preventiveCare, href: '/services/preventive-care', img: '/assets/clinic_lobby.png' },
+    { title: t.header.beyondSmile, href: '/services/beyond-the-smile', img: '/assets/tech_solea.png' },
+  ];
+
   // ── visibility state ────────────────────────────────────────────────────────
   // Always start visible. Use native scroll listener so it fires immediately.
   const [isHidden,      setIsHidden]      = useState(false);
@@ -112,7 +122,7 @@ export default function Header() {
               onClick={() => { setIsMenuOpen(!isMenuOpen); setIsServicesOpen(false); }}
               className="hidden lg:flex items-center gap-2 font-sans text-base font-medium hover:opacity-60 transition-opacity"
             >
-              Menu
+              {t.header.menu}
               {isMenuOpen ? <X className="w-5 h-5" /> : <MenuIcon className="w-5 h-5" />}
             </button>
 
@@ -126,7 +136,7 @@ export default function Header() {
                 onClick={() => { setIsServicesOpen(!isServicesOpen); setIsMenuOpen(false); }}
                 className="flex items-center gap-1.5 font-sans text-base font-medium hover:opacity-60 transition-opacity"
               >
-                Services
+                {t.header.services}
                 <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${isServicesOpen ? 'rotate-180' : ''}`} />
               </button>
             </div>
@@ -135,13 +145,20 @@ export default function Header() {
           {/* ── RIGHT: Patient Form + Phone + CTA ───────────────────────── */}
           <div className={`hidden lg:flex items-center gap-7 font-sans text-base font-medium ${rightColor} transition-colors duration-500`}>
 
+            <button 
+              onClick={() => setLanguage(language === 'en' ? 'fr' : 'en')}
+              className="flex items-center gap-1.5 hover:opacity-60 transition-opacity uppercase text-sm font-bold tracking-wider"
+            >
+              {language === 'en' ? 'FR' : 'EN'}
+            </button>
+
             <a
               href="https://mysecurepractice.com/Truform/d645c1d1-2597-4aea-a274-eb777e61f7a1/Submission/Create"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-1.5 hover:opacity-60 transition-opacity"
             >
-              Patient form <ArrowUpRight className="w-4 h-4" />
+              {t.header.patientForm} <ArrowUpRight className="w-4 h-4" />
             </a>
 
             <button className="flex items-center gap-1.5 hover:opacity-60 transition-opacity cursor-pointer">
@@ -156,18 +173,26 @@ export default function Header() {
               <MagneticButton
                 className="flex items-center gap-3 px-6 py-3 rounded-full text-[15px] font-semibold bg-white text-navy hover:bg-[#f0eeeb] transition-colors duration-500"
               >
-                Book A Call <Plus className="w-4 h-4" />
+                {t.header.bookCall} <Plus className="w-4 h-4" />
               </MagneticButton>
             </Link>
           </div>
 
-          {/* Mobile hamburger */}
-          <button
-            className={`lg:hidden ${leftColor} transition-colors shrink-0`}
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-          >
-            {isMenuOpen ? <X className="w-6 h-6" /> : <MenuIcon className="w-6 h-6" />}
-          </button>
+          {/* Mobile hamburger & lang toggle */}
+          <div className="flex items-center gap-4 lg:hidden">
+            <button 
+              onClick={() => setLanguage(language === 'en' ? 'fr' : 'en')}
+              className={`uppercase text-sm font-bold tracking-wider ${leftColor} transition-colors`}
+            >
+              {language === 'en' ? 'FR' : 'EN'}
+            </button>
+            <button
+              className={`lg:hidden ${leftColor} transition-colors shrink-0`}
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+            >
+              {isMenuOpen ? <X className="w-6 h-6" /> : <MenuIcon className="w-6 h-6" />}
+            </button>
+          </div>
 
         </div>
       </motion.header>
@@ -216,11 +241,11 @@ export default function Header() {
                 <a href="https://mysecurepractice.com/Truform/d645c1d1-2597-4aea-a274-eb777e61f7a1/Submission/Create"
                    target="_blank" rel="noopener noreferrer"
                    className="flex items-center justify-between py-4 hover:text-white transition-colors border-b border-white/10 group">
-                  Patient form <ArrowUpRight className="w-3 h-3 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                  {t.header.patientForm} <ArrowUpRight className="w-3 h-3 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                 </a>
                 <Link href="/faq" onClick={() => setIsMenuOpen(false)}
                       className="flex items-center justify-between py-4 hover:text-white transition-colors border-b border-white/10 group">
-                  FAQ <ArrowUpRight className="w-3 h-3 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                  {t.header.faq} <ArrowUpRight className="w-3 h-3 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                 </Link>
               </motion.div>
             </motion.div>
@@ -233,9 +258,9 @@ export default function Header() {
               className="flex flex-col gap-10 lg:w-[70%] lg:h-full justify-between mt-10 lg:mt-0"
             >
               <div className="flex flex-col gap-5">
-                <motion.h3 variants={menuItemVariants} className="font-serif text-4xl lg:text-7xl tracking-tight text-white mb-2">Services:</motion.h3>
+                <motion.h3 variants={menuItemVariants} className="font-serif text-4xl lg:text-7xl tracking-tight text-white mb-2">{t.header.services}:</motion.h3>
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                  {serviceCards.map((card, i) => (
+                  {translatedServiceCards.map((card, i) => (
                     <motion.div key={i} variants={menuItemVariants}>
                       <Link href={card.href} onClick={() => setIsMenuOpen(false)} className="group flex flex-col gap-3">
                         <div className="relative aspect-square overflow-hidden bg-white/5">
@@ -249,7 +274,7 @@ export default function Header() {
               </div>
 
               <div className="grid grid-cols-2 gap-4 lg:gap-8 mt-6 font-serif tracking-tight leading-none">
-                {[['About Us', '/about'], ['Laboratory', '/technology'], ['Technology', '/technology'], ['Contact', '/contact']].map(([label, href]) => (
+                {[[t.header.aboutUs, '/about'], [t.header.laboratory, '/technology'], [t.header.technology, '/technology'], [t.header.contact, '/contact']].map(([label, href]) => (
                   <motion.div key={label} variants={menuItemVariants}>
                     <Link href={href} onClick={() => setIsMenuOpen(false)}
                           className="text-4xl lg:text-[6vw] text-white hover:opacity-100 transition-opacity duration-300">
@@ -278,14 +303,14 @@ export default function Header() {
           >
             <div className="flex items-center justify-between mb-6">
               <span className="font-sans text-sm font-medium flex items-center gap-2 text-navy/60">
-                Services
+                {t.header.services}
                 <button onClick={() => setIsServicesOpen(false)}>
                   <X className="w-3 h-3 cursor-pointer hover:text-navy transition-colors" />
                 </button>
               </span>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-              {serviceCards.map((card, i) => (
+              {translatedServiceCards.map((card, i) => (
                 <Link key={i} href={card.href} onClick={() => setIsServicesOpen(false)} className="group flex flex-col gap-3">
                   <div className="relative aspect-square overflow-hidden bg-black/5 rounded-xl">
                     <Image src={card.img} alt={card.title} fill className="object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700" />
