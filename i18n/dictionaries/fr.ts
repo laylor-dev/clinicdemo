@@ -24,7 +24,8 @@ export const fr: Dictionary = {
     titleLine1: ["Dentisterie", "Esthétique", "Premium"],
     subtitle1: "Concevoir des sourires qui sont",
     subtitle2: "aussi sains qu'ils sont",
-    subtitle3: "beaux"
+    subtitle3: "beaux",
+    combinedScience: "Nous combinons la science\navancée avec une touche d'artiste."
   },
   footer: {
     servicesHeader: "Services",

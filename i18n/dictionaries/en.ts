@@ -22,7 +22,8 @@ export const en = {
     titleLine1: ["Premium", "Esthetic", "Dentistry"],
     subtitle1: "Designing smiles that are",
     subtitle2: "as healthy as they are",
-    subtitle3: "beautiful"
+    subtitle3: "beautiful",
+    combinedScience: "We combine advanced science\nwith an artist's touch."
   },
   footer: {
     servicesHeader: "Services",

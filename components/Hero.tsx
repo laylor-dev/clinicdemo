@@ -50,7 +50,7 @@ export default function Hero() {
         scrollTrigger: {
           trigger: containerRef.current,
           start: 'top top',
-          end: '+=300%', // Increased to require approx 3-4 scrolls to pass through
+          end: '+=400%', // Reduced slightly for faster progression
           pin: stickyRef.current,
           scrub: 1,
           anticipatePin: 1,
@@ -70,26 +70,33 @@ export default function Hero() {
         .fromTo(marqueeInner.current, 
           { x: '100vw', xPercent: 0 }, 
           { 
-            x: '100vw', // keep base translation at 100vw
-            xPercent: -80, // move left by 80% of its own width so the final word remains visible
-            duration: 0.95, 
+            x: '95vw', // Bring the right edge just inside the screen
+            xPercent: -100, // Move left by its full width
+            duration: 1.25, // Natural scroll timing
             ease: 'none' 
           }, 
           0.05
         )
-        // reveal service tags at bottom
+        // reveal service labels and bottom-right phrase smoothly
         .fromTo(
-          servicesRef.current?.querySelectorAll('span') ?? [],
-          { opacity: 0, y: 16 },
-          { opacity: 1, y: 0, stagger: 0.05, duration: 0.2, ease: 'power2.out' },
-          0.65
+          servicesRef.current?.querySelectorAll('.reveal-text') ?? [],
+          { opacity: 0, y: 30, filter: 'blur(10px)' },
+          { 
+            opacity: 1, 
+            y: 0, 
+            filter: 'blur(0px)',
+            stagger: 0.1, 
+            duration: 0.8, 
+            ease: 'power3.out' 
+          },
+          0.8 // Start while marquee is finishing
         )
         // PARALLAX CURTAIN REVEAL: Pull the Hero clip-path up to reveal what's underneath
         .to(stickyRef.current, { 
             clipPath: 'inset(0px 0px 100vh 0px)', 
             ease: 'none', 
-            duration: 0.8 
-        }, 1.2); 
+            duration: 1.2 // Longer duration for the reveal itself
+        }, 1.6); // Start reveal IMMEDIATELY after labels begin showing
     }, containerRef);
 
     return () => ctx.revert();
@@ -180,11 +187,33 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* ── SERVICE LABELS ── */}
-        <div ref={servicesRef} className="absolute top-[80%] left-12 right-12 flex justify-between z-30 pointer-events-none">
-          {t.hero.services.map((s: string) => (
-            <span key={s} className="font-sans text-xs lg:text-lg font-semibold tracking-[0.02em] text-white opacity-0 drop-shadow-md">{s}</span>
-          ))}
+        {/* ── SERVICE LABELS & BOTTOM PHRASE ── */}
+        <div ref={servicesRef} className="absolute inset-x-0 bottom-12 lg:bottom-16 px-8 lg:px-14 z-30 pointer-events-none">
+          <div className="flex justify-between items-end w-full relative">
+            {/* Left label */}
+            <span className="reveal-text font-sans text-[9px] lg:text-xs font-bold tracking-[0.15em] text-white/80 uppercase">
+              {t.hero.services[0]}
+            </span>
+            
+            {/* Center label */}
+            <span className="reveal-text font-sans text-[9px] lg:text-xs font-bold tracking-[0.15em] text-white/80 uppercase absolute left-1/2 -translate-x-1/2">
+              {t.hero.services[1]}
+            </span>
+
+            {/* Right label & Phrase stack */}
+            <div className="flex flex-col items-end gap-6 lg:gap-8">
+              <span className="reveal-text font-sans text-[9px] lg:text-xs font-bold tracking-[0.15em] text-white/80 uppercase">
+                {t.hero.services[2]}
+              </span>
+              <div className="reveal-text text-right mr-[-4px]">
+                <p className="font-serif italic text-[14px] lg:text-[18px] leading-[1.2] text-white/90">
+                  {t.hero.combinedScience.split('\n').map((line: string, i: number) => (
+                    <span key={i} className="block">{line}</span>
+                  ))}
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* ── TITLE overlay ── */}
