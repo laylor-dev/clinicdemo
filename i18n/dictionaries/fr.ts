@@ -311,5 +311,55 @@ export const fr: Dictionary = {
         ]
       }
     }
+  },
+  technologyPage: {
+    heroTitle1: "Précision",
+    heroTitle2: "redéfinie.",
+    heroSubtitle: "Une technologie de pointe intégrée à chaque étape de notre processus pour une guérison plus rapide et des résultats époustouflants.",
+    heroImageAlt: "Unité de fraisage dentaire CAO/FAO",
+    standardLabel: "Le Standard ADA",
+    introTitle1: "L'innovation à l'",
+    introTitle2: "Intersection",
+    introTitle3: "de l'Art et de la Science.",
+    introDesc: "Nous investissons sans relâche dans les technologies dentaires les plus avancées au monde. Non pas pour l'originalité, mais pour garantir que nos patients vivent la limite absolue de ce que la dentisterie moderne peut accomplir.",
+    technologies: [
+      {
+        id: 'itero',
+        title: 'Empreintes Numériques iTero',
+        description: "Nous capturons un modèle numérique 3D haute résolution de vos dents en quelques minutes. Pas d'empreintes salissantes, juste une précision parfaite."
+      },
+      {
+        id: 'solea',
+        title: 'Laser Solea',
+        description: "Le premier laser dentaire au CO2 au monde qui permet des procédures sans anesthésie, sans sang et sans douleur pour les tissus durs et mous."
+      },
+      {
+        id: 'camera',
+        title: 'Caméra Intra-Orale',
+        description: "Voyez ce que nous voyons. Nous utilisons des caméras ultra-petites pour projeter des images haute définition de votre bouche, afin que vous puissiez participer aux soins."
+      },
+      {
+        id: 'imaging',
+        title: 'Imagerie Numérique',
+        description: "Des radiographies numériques ultra-rapides qui utilisent 90 % moins de radiations que les films traditionnels, tout en fournissant des données de diagnostic instantanées et claires."
+      },
+      {
+        id: 'cadcam',
+        title: 'Restaurations CAO/FAO',
+        description: "Conception numérique et fraisage de précision pour les couronnes et facettes en céramique qui peuvent parfois être réalisées en une seule visite."
+      },
+      {
+        id: 'scan',
+        title: 'Scanner 3D',
+        description: "La technologie Cone Beam CT offre une vue 3D complète de votre mâchoire et de votre structure osseuse, essentielle pour une chirurgie implantaire sûre."
+      }
+    ],
+    labLabel: "Artisanat Interne",
+    labTitle1: "ADA",
+    labTitle2: "xVM Labs",
+    labDesc1: "Aventura Dental Arts abrite son propre laboratoire dentaire boutique. Cette collaboration directe entre nos docteurs et nos maîtres céramistes permet un niveau de personnalisation impossible dans les configurations traditionnelles.",
+    labDesc2: "Chaque couronne, facette et restauration est finie à la main sur place, garantissant que la teinte, la translucidité et la texture correspondent parfaitement à vos dents naturelles.",
+    labCTA: "Découvrez le Standard du Labo",
+    labImageAlt: "Maître Céramiste du Laboratoire ADA"
   }
 };

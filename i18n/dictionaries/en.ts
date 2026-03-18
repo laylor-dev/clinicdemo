@@ -309,5 +309,55 @@ export const en = {
         ]
       }
     }
+  },
+  technologyPage: {
+    heroTitle1: "Precision",
+    heroTitle2: "redefined.",
+    heroSubtitle: "Advanced technology integrated into every step of our process for faster healing and breathtaking results.",
+    heroImageAlt: "CAD/CAM Dental Milling Unit",
+    standardLabel: "The ADA Standard",
+    introTitle1: "Innovation at the",
+    introTitle2: "Intersection",
+    introTitle3: "of Art and Science.",
+    introDesc: "We invest relentlessly in the world's most advanced dental technologies. Not for the sake of novelty, but to ensure that our patients experience the absolute limit of what modern dentistry can achieve.",
+    technologies: [
+      {
+        id: 'itero',
+        title: 'iTero Digital Impressions',
+        description: 'We capture a high-resolution 3D digital model of your teeth in minutes. No messy impressions, just perfect precision.'
+      },
+      {
+        id: 'solea',
+        title: 'Solea Laser',
+        description: "The world's first CO2 dental laser that enables anesthesia-free, blood-free, and pain-free procedures for both hard and soft tissue."
+      },
+      {
+        id: 'camera',
+        title: 'Intra Oral Camera',
+        description: 'See what we see. We use ultra-small cameras to project high-definition images of your mouth, so you can participate in your care.'
+      },
+      {
+        id: 'imaging',
+        title: 'Digital Imaging',
+        description: 'High-speed digital X-rays that use 90% less radiation than traditional films, while providing instant, crystal-clear diagnostic data.'
+      },
+      {
+        id: 'cadcam',
+        title: 'CAD/CAM Restorations',
+        description: 'Digital design and precision milling for ceramic crowns and veneers that can sometimes be completed in just one visit.'
+      },
+      {
+        id: 'scan',
+        title: '3D CAT Scan',
+        description: 'Cone Beam CT technology provides a comprehensive 3D view of your jaw and bone structure, essential for safe implant surgery.'
+      }
+    ],
+    labLabel: "In-House Artistry",
+    labTitle1: "ADA",
+    labTitle2: "xVM Labs",
+    labDesc1: "Aventura Dental Arts is home to our very own boutique dental laboratory. This direct collaboration between our doctors and master ceramists allows for a level of customization impossible in traditional setups.",
+    labDesc2: "Every crown, veneer, and restoration is hand-finished on-site, ensuring the shade, translucency, and texture perfectly match your natural teeth.",
+    labCTA: "Experience the Lab Standard",
+    labImageAlt: "ADA Laboratory Master Ceramist"
   }
 };
