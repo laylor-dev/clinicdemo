@@ -96,7 +96,7 @@ export default function Header() {
         }`}
       >
         <div
-          style={{ paddingTop: '3rem', paddingBottom: '3rem' }}
+          style={{ paddingTop: '1.2rem', paddingBottom: '1.2rem' }}
           className="w-full max-w-[1440px] mx-auto px-6 lg:px-12 flex items-center justify-between gap-4 lg:gap-8"
         >
 

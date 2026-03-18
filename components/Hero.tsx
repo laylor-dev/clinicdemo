@@ -1,12 +1,15 @@
 'use client';
 
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { useRef, useEffect, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { motion } from 'framer-motion';
-import Spline from '@splinetool/react-spline';
 import { useLanguage } from '@/i18n/LanguageContext';
+
+// Lazy-load Spline so its runtime doesn't block the Hero text animation
+const Spline = dynamic(() => import('@splinetool/react-spline'), { ssr: false });
 
 export default function Hero() {
   const { t } = useLanguage();
@@ -30,7 +33,7 @@ export default function Hero() {
       /* ── entrance char animation ── */
       const chars1 = containerRef.current?.querySelectorAll('.h1a');
       const chars2 = containerRef.current?.querySelectorAll('.h1b');
-      const tl = gsap.timeline({ delay: 0.3 });
+      const tl = gsap.timeline({ paused: true });
       if (chars1?.length)
         tl.fromTo(chars1,
           { opacity: 0, y: 60, rotateX: -60 },
@@ -40,6 +43,18 @@ export default function Hero() {
           { opacity: 0, y: 60, rotateX: -60 },
           { opacity: 1, y: 0, rotateX: 0, duration: 0.9, stagger: 0.025, ease: 'power4.out' },
           '-=0.65');
+
+      /* Sync with Loader: start entrance when Loader finishes fading out */
+      const hasLoaded = typeof sessionStorage !== 'undefined' && sessionStorage.getItem('ada-loaded');
+      if (hasLoaded && document.querySelector('[data-loader-active]') === null) {
+        // Loader already done (repeat visit in same session)
+        tl.play();
+      } else {
+        const onLoaderDone = () => { tl.play(); };
+        window.addEventListener('loader-complete', onLoaderDone, { once: true });
+        // Fallback: if event never fires (e.g. Loader skipped), play after 4.5s
+        setTimeout(() => { if (tl.paused()) tl.play(); }, 4500);
+      }
 
       /* ── scroll timeline ── */
       // Set initial widths so both panels are visible immediately
@@ -70,7 +85,7 @@ export default function Hero() {
         .fromTo(marqueeInner.current, 
           { x: '100vw', xPercent: 0 }, 
           { 
-            x: '95vw', // Bring the right edge just inside the screen
+            x: window.innerWidth >= 1024 ? '95vw' : '85vw', // Bring the right edge inside the screen
             xPercent: -100, // Move left by its full width
             duration: 1.25, // Natural scroll timing
             ease: 'none' 
@@ -178,7 +193,7 @@ export default function Hero() {
           >
             <div
               ref={marqueeInner}
-              className="flex will-change-transform w-max"
+              className="flex will-change-transform w-max shrink-0"
             >
               <span className="font-serif text-[15vw] lg:text-[12vw] leading-none tracking-tight text-white whitespace-nowrap px-[4vw]">
                 {MARQUEE}
@@ -188,30 +203,27 @@ export default function Hero() {
         </div>
 
         {/* ── SERVICE LABELS & BOTTOM PHRASE ── */}
-        <div ref={servicesRef} className="absolute inset-x-0 bottom-12 lg:bottom-16 px-8 lg:px-14 z-30 pointer-events-none">
-          <div className="flex justify-between items-end w-full relative">
-            {/* Left label */}
+        <div ref={servicesRef} className="absolute inset-x-0 bottom-16 lg:bottom-20 px-8 lg:px-14 z-30 pointer-events-none">
+          {/* Three labels in one horizontal line */}
+          <div className="flex justify-between items-center w-full mb-6 lg:mb-8">
             <span className="reveal-text font-sans text-[9px] lg:text-xs font-bold tracking-[0.15em] text-white/80 uppercase">
               {t.hero.services[0]}
             </span>
-            
-            {/* Center label */}
-            <span className="reveal-text font-sans text-[9px] lg:text-xs font-bold tracking-[0.15em] text-white/80 uppercase absolute left-1/2 -translate-x-1/2">
+            <span className="reveal-text font-sans text-[9px] lg:text-xs font-bold tracking-[0.15em] text-white/80 uppercase">
               {t.hero.services[1]}
             </span>
-
-            {/* Right label & Phrase stack */}
-            <div className="flex flex-col items-end gap-6 lg:gap-8">
-              <span className="reveal-text font-sans text-[9px] lg:text-xs font-bold tracking-[0.15em] text-white/80 uppercase">
-                {t.hero.services[2]}
-              </span>
-              <div className="reveal-text text-right mr-[-4px]">
-                <p className="font-serif italic text-[14px] lg:text-[18px] leading-[1.2] text-white/90">
-                  {t.hero.combinedScience.split('\n').map((line: string, i: number) => (
-                    <span key={i} className="block">{line}</span>
-                  ))}
-                </p>
-              </div>
+            <span className="reveal-text font-sans text-[9px] lg:text-xs font-bold tracking-[0.15em] text-white/80 uppercase">
+              {t.hero.services[2]}
+            </span>
+          </div>
+          {/* Phrase below, right-aligned */}
+          <div className="flex justify-end">
+            <div className="reveal-text text-right mr-[-4px]">
+              <p className="font-serif italic text-[14px] lg:text-[18px] leading-[1.2] text-white/90">
+                {t.hero.combinedScience.split('\n').map((line: string, i: number) => (
+                  <span key={i} className="block">{line}</span>
+                ))}
+              </p>
             </div>
           </div>
         </div>

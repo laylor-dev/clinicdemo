@@ -127,8 +127,11 @@ export default function CinematicScroll() {
       }
     };
 
-    // Load priority frames first
-    for (let i = 1; i <= PRIORITY_FRAMES; i++) loadFrame(i);
+    // Defer frame preloading so Hero animation gets uncontested main thread
+    const preloadTimer = setTimeout(() => {
+      // Load priority frames first
+      for (let i = 1; i <= PRIORITY_FRAMES; i++) loadFrame(i);
+    }, 1500);
     images.current = imgs;
 
     /* ── ScrollTrigger ── */
@@ -160,6 +163,7 @@ export default function CinematicScroll() {
     });
 
     return () => {
+      clearTimeout(preloadTimer);
       window.removeEventListener('resize', resize);
       trigger.kill();
     };

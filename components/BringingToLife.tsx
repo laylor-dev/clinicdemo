@@ -103,7 +103,7 @@ export default function BringingToLife() {
               className="object-cover object-center"
               quality={100}
               sizes="(min-width: 768px) 100vw, 100vw"
-              priority
+              loading="lazy"
             />
           </div>
           
@@ -116,7 +116,7 @@ export default function BringingToLife() {
               className="object-cover object-top"
               quality={100}
               sizes="100vw"
-              priority
+              loading="lazy"
             />
           </div>
         </div>
